@@ -27,8 +27,7 @@
 <main class="layout">
 
   <section class="board-card" aria-label="Spielfeld">
-    <svg id="board" class="board" viewBox="-615 -560 1230 1120" role="img" aria-label="Zufällig erzeugtes Catan-Spielfeld"></svg>
-    <p class="hint">Tipp: Fahre in der Liste rechts über einen Rohstoff, dann leuchten seine Felder auf.</p>
+    <svg id="board" class="board" viewBox="-660 -575 1320 1150" role="img" aria-label="Zufällig erzeugtes Catan-Spielfeld"></svg>
   </section>
 
   <aside class="side">
@@ -46,26 +45,21 @@
 
       <div class="mini-row">
         <button id="btn-tiles" class="mini">Felder neu</button>
-        <button id="btn-nums" class="mini">Zahlen neu</button>
+        <button id="btn-nums" class="mini" title="Die Spirale startet in einer anderen Ecke">Zahlen neu</button>
         <button id="btn-ports" class="mini">Häfen neu</button>
       </div>
 
       <label class="opt"><input type="checkbox" id="opt-desert"><span class="tick"></span>
-        <span class="otext"><b>Wüste in die Mitte</b><small>Beim Einsteiger-Aufbau liegt sie meist dort.</small></span></label>
-      <label class="opt"><input type="checkbox" id="opt-unique"><span class="tick"></span>
-        <span class="otext"><b>Gleiche Zahlen getrennt</b><small>Zusatzregel: Keine zwei gleichen Zahlen als Nachbarn.</small></span></label>
+        <span class="otext"><b>Wüste in die Mitte</b><small>Sonst landet sie irgendwo auf der Insel.</small></span></label>
+      <label class="opt"><input type="checkbox" id="opt-ports"><span class="tick"></span>
+        <span class="otext"><b>Häfen zufällig verteilen</b><small>Optional: Die 9 Hafenplättchen werden auf den festen Hafenplätzen gemischt.</small></span></label>
 
       <div class="share">
         <button id="btn-copy" class="soft">🔗 Link kopieren</button>
         <button id="btn-print" class="soft">🖨️ Drucken</button>
       </div>
+      <p class="startline">Zahlen starten in der Ecke <b id="start-corner">–</b></p>
       <p class="seedline">Brett-Code: <code id="seed">–</code></p>
-    </section>
-
-    <section class="card">
-      <h2>Rohstoff-Waage</h2>
-      <p class="lead">Wie oft ein Rohstoff fällt: Jeder Punkt steht für eine der 36 Würfelkombinationen.</p>
-      <ul id="stats" class="stats"></ul>
     </section>
 
     <section class="card">
@@ -77,11 +71,12 @@
       <summary>So wird gemischt</summary>
       <ol>
         <li>Die 19 Landfelder werden gemischt und im Muster 3-4-5-4-3 ausgelegt.</li>
-        <li>Die 18 Zahlenchips (2 und 12 einmal, alle anderen außer der 7 zweimal) kommen zufällig auf die Felder, die Wüste bekommt keinen.</li>
-        <li>Die roten Zahlen 6 und 8 dürfen nie nebeneinander liegen. Der Generator hält das garantiert ein.</li>
-        <li>Die 9 Häfen (4× 3:1 und je 1× 2:1 für Holz, Lehm, Wolle, Getreide, Erz) werden gemischt und auf die Küstenplätze verteilt.</li>
+        <li>Die Zahlenchips folgen immer der festen Reihenfolge A–R: Start auf einem der 6 Eckfelder, dann gegen den Uhrzeigersinn in einer Spirale nach innen. Die Wüste wird übersprungen.</li>
+        <li>Das ergibt 6 Startecken × 19 mögliche Wüstenplätze = 114 Zahlenbilder. Die roten 6 und 8 liegen dabei nie nebeneinander.</li>
+        <li>Die 9 Häfen (4× 3:1, je 1× 2:1 für Holz, Lehm, Wolle, Getreide, Erz) sitzen standardmäßig an den festen Plätzen des Rahmens. Wer mag, mischt sie zufällig.</li>
         <li>Gespielt wird mit 3–4 Spielern und dem Standardbrett.</li>
       </ol>
+      <div class="order"><b>Zahlenfolge</b><div id="chip-order"></div></div>
     </details>
 
   </aside>

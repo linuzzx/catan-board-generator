@@ -284,30 +284,30 @@ def chip(n):
 for n in list(range(2, 7)) + list(range(8, 13)):
     write(f"chip-{n}.svg", chip(n))
 
-# ---------- Häfen ----------
-def harbor(kind, pier=True):
+# ---------- Häfen als Schiffe (wie auf dem Original-Rahmen) ----------
+def ship(kind):
     ratio = "3:1" if kind == "any" else "2:1"
-    bg = "#f6e6b4" if kind == "any" else BG[kind]
-    inner = ""
-    if kind != "any":
-        inner = f'<g transform="translate(26 3) scale(.5)">{icon_body(kind)}</g>'
+    if kind == "any":
+        sail_icon = '<text x="64" y="47" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="40" fill="#2f6fb5">?</text>'
     else:
-        inner = '<text x="50" y="42" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="30" fill="#2a2118">?</text>'
-    PIER = (f'''<g stroke="{C['outline']}" stroke-width="2" stroke-linejoin="round"><rect x="14" y="76" width="72" height="9" rx="2" fill="#9b6a38"/><rect x="22" y="70" width="8" height="24" fill="#7a4f27"/><rect x="70" y="70" width="8" height="24" fill="#7a4f27"/></g>''' if pier else "")
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-{PIER}
-<circle cx="50" cy="44" r="36" fill="{bg}" stroke="{C['outline']}" stroke-width="3"/>
-<circle cx="50" cy="44" r="31" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="2"/>
-{inner}
-<rect x="30" y="54" width="40" height="19" rx="9.5" fill="#fff6d8" stroke="{C['outline']}" stroke-width="2"/>
-<text x="50" y="68.5" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="15" fill="#2a2118">{ratio}</text>
+        sail_icon = f'<g transform="translate(46 17) scale(.37)">{icon_body(kind)}</g>'
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 120" width="130" height="120">
+<ellipse cx="66" cy="104" rx="52" ry="9" fill="#0b3d66" opacity=".28"/>
+<path d="M8,84 Q66,112 122,80 L110,98 Q66,118 22,100 Z" fill="#8f5d2c" stroke="{C['outline']}" stroke-width="3" stroke-linejoin="round"/>
+<path d="M14,86 Q66,108 118,82" fill="none" stroke="#c28a4c" stroke-width="3" stroke-linecap="round"/>
+<line x1="64" y1="6" x2="64" y2="90" stroke="{C['outline']}" stroke-width="5" stroke-linecap="round"/>
+<line x1="64" y1="6" x2="64" y2="90" stroke="#9b6a38" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M68,12 C112,24 114,68 70,82 L28,82 C14,52 28,22 68,12 Z" fill="#fff3d6" stroke="{C['outline']}" stroke-width="3" stroke-linejoin="round"/>
+<path d="M68,12 C104,22 108,50 98,66" fill="none" stroke="#fff" stroke-width="3" opacity=".7" stroke-linecap="round"/>
+{sail_icon}
+<text x="66" y="72" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="18" fill="#2a2118">{ratio}</text>
+<path d="M64,6 L84,12 L64,18 Z" fill="{C['red']}" stroke="{C['outline']}" stroke-width="1.5" stroke-linejoin="round"/>
 </svg>
 '''
 for k in ["any", "wood", "brick", "wool", "grain", "ore"]:
-    write(f"harbor-{k}.svg", harbor(k))
-    write(f"port-{k}.svg", harbor(k, pier=False))
+    write(f"ship-{k}.svg", ship(k))
 
-for name, fn in [("hex-forest", gen_forest), ("hex-pasture", gen_pasture), ("hex-fields", gen_fields), ("hex-hills", gen_hills), ("hex-mountains", gen_mountains), ("hex-desert", gen_desert), ("hex-sea", gen_sea)]:
+for name, fn in [("hex-forest", gen_forest), ("hex-pasture", gen_pasture), ("hex-fields", gen_fields), ("hex-hills", gen_hills), ("hex-mountains", gen_mountains), ("hex-desert", gen_desert)]:
     write(name + ".svg", fn())
 
 print("fertig:", len(os.listdir(OUT)), "Dateien")

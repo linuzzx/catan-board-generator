@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 120" width="130" height="120">
+<ellipse cx="66" cy="104" rx="52" ry="9" fill="#0b3d66" opacity=".28"/>
+<path d="M8,84 Q66,112 122,80 L110,98 Q66,118 22,100 Z" fill="#8f5d2c" stroke="#3b2a14" stroke-width="3" stroke-linejoin="round"/>
+<path d="M14,86 Q66,108 118,82" fill="none" stroke="#c28a4c" stroke-width="3" stroke-linecap="round"/>
+<line x1="64" y1="6" x2="64" y2="90" stroke="#3b2a14" stroke-width="5" stroke-linecap="round"/>
+<line x1="64" y1="6" x2="64" y2="90" stroke="#9b6a38" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M68,12 C112,24 114,68 70,82 L28,82 C14,52 28,22 68,12 Z" fill="#fff3d6" stroke="#3b2a14" stroke-width="3" stroke-linejoin="round"/>
+<path d="M68,12 C104,22 108,50 98,66" fill="none" stroke="#fff" stroke-width="3" opacity=".7" stroke-linecap="round"/>
+<g transform="translate(46 17) scale(.37)"><rect x="18" y="62" width="30" height="13" rx="1.5" fill="#d3652f" stroke="#6e2a10" stroke-width="1.6"/><rect x="20" y="64" width="26" height="3" fill="#f2965c" opacity=".8"/><rect x="48" y="62" width="30" height="13" rx="1.5" fill="#d3652f" stroke="#6e2a10" stroke-width="1.6"/><rect x="50" y="64" width="26" height="3" fill="#f2965c" opacity=".8"/><rect x="30" y="47" width="30" height="13" rx="1.5" fill="#d3652f" stroke="#6e2a10" stroke-width="1.6"/><rect x="32" y="49" width="26" height="3" fill="#f2965c" opacity=".8"/><rect x="60" y="47" width="30" height="13" rx="1.5" fill="#d3652f" stroke="#6e2a10" stroke-width="1.6"/><rect x="62" y="49" width="26" height="3" fill="#f2965c" opacity=".8"/><rect x="18" y="32" width="30" height="13" rx="1.5" fill="#d3652f" stroke="#6e2a10" stroke-width="1.6"/><rect x="20" y="34" width="26" height="3" fill="#f2965c" opacity=".8"/><rect x="48" y="32" width="30" height="13" rx="1.5" fill="#d3652f" stroke="#6e2a10" stroke-width="1.6"/><rect x="50" y="34" width="26" height="3" fill="#f2965c" opacity=".8"/></g>
+<text x="66" y="72" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="18" fill="#2a2118">2:1</text>
+<path d="M64,6 L84,12 L64,18 Z" fill="#c4161c" stroke="#3b2a14" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>

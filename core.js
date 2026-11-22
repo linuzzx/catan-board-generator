@@ -27,14 +27,6 @@
   });
   var CENTER = LAND_SET[key(0, 0)];
 
-  // Meerring (18 Felder)
-  var SEA = [];
-  for (var rr = -3; rr <= 3; rr++) {
-    for (var qq = Math.max(-3, -rr - 3); qq <= Math.min(3, -rr + 3); qq++) {
-      if (Math.max(Math.abs(qq), Math.abs(rr), Math.abs(qq + rr)) === 3) SEA.push({ q: qq, r: rr });
-    }
-  }
-
   // Küstenkanten (30) im Uhrzeigersinn, beginnend oben links
   var COAST = [];
   LAND.forEach(function (c, i) {
@@ -47,7 +39,7 @@
       }
     });
   });
-  var START = -Math.PI * 0.84;
+  var START = -125 * Math.PI / 180; // knapp vor der Kante oben links (NW des obersten linken Feldes)
   COAST.sort(function (a, b) {
     var fa = (a.ang - START + 4 * Math.PI) % (2 * Math.PI);
     var fb = (b.ang - START + 4 * Math.PI) % (2 * Math.PI);
@@ -56,6 +48,8 @@
 
   // 9 Hafenplätze: Abstände 3-4-3-3-4-3-3-4-3 Kanten (dreifach symmetrisch, wie auf dem Original-Rahmen)
   var PORT_EDGE_IDX = [0, 3, 7, 10, 13, 17, 20, 23, 27];
+  // Standard-Rahmen (vom Original-Spielplan abgelesen, im Uhrzeigersinn ab oben links)
+  var PORT_STANDARD = ["any", "grain", "ore", "any", "wool", "any", "any", "brick", "wood"];
   var PORT_EDGES = PORT_EDGE_IDX.map(function (i) { return COAST[i]; });
 
   // ---------- Spielmaterial (Standardspiel 3–4 Spieler) ----------
@@ -71,8 +65,7 @@
     rep("forest", 4), rep("pasture", 4), rep("fields", 4),
     rep("hills", 3), rep("mountains", 3), ["desert"]
   );
-  var CHIPS = [2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12];
-  var PORT_DECK = rep("any", 4).concat(["wood", "brick", "wool", "grain", "ore"]);
+    var PORT_DECK = rep("any", 4).concat(["wood", "brick", "wool", "grain", "ore"]);
   var PORT_RES = { wood: "Holz", brick: "Lehm", wool: "Wolle", grain: "Getreide", ore: "Erz" };
 
   function rep(v, n) { var a = []; for (var i = 0; i < n; i++) a.push(v); return a; }
@@ -114,7 +107,6 @@
   }
 
   // ---------- Brett erzeugen ----------
-  // opts: { desertCenter: bool, uniqueNumbers: bool }
   function makeTiles(seed, opts) {
     var rand = rng("t:" + seed);
     if (opts.desertCenter) {
@@ -126,114 +118,86 @@
     return shuffle(TILE_DECK, rand);
   }
 
-  // Zufällige Verteilung per Backtracking, damit die Regeln garantiert eingehalten werden:
-  //  - die roten Zahlen 6 und 8 liegen nie nebeneinander (offizielle Regel)
-  //  - optional: gleiche Zahlen liegen nie nebeneinander
-  function makeNumbers(seed, tiles, opts) {
-    var rand = rng("n:" + seed);
-    var spots = [];
-    tiles.forEach(function (t, i) { if (t !== "desert") spots.push(i); });
+  // ---------- Offizielle Zahlenverteilung: Spirale mit den Chips A bis R ----------
+  // Start auf einer der 6 Eckfelder, gegen den Uhrzeigersinn nach innen, die Wüste wird übersprungen.
+  var CHIP_ORDER = [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11]; // A..R
+  var CORNER_NAMES = ["oben links", "links", "unten links", "unten rechts", "rechts", "oben rechts"];
 
-    // Mehrere zufällige Anläufe mit begrenztem Backtracking (verhindert Festfahren)
-    for (var attempt = 0; attempt < 400; attempt++) {
-      var res = tryPlace(shuffle(spots, rand), opts.uniqueNumbers);
-      if (res) return res;
-    }
-    // Nur wenn die Zusatzregel gar nicht erfüllbar wäre: ohne sie, die 6/8-Regel bleibt immer bestehen
-    if (opts.uniqueNumbers) return makeNumbers(seed + "~", tiles, { uniqueNumbers: false });
-    throw new Error("Keine gültige Zahlenverteilung gefunden");
+  function hexDist(c) { return Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)); }
+  function angleCCW(i) { var p = pos(LAND[i].q, LAND[i].r); return Math.atan2(-p.y, p.x) * 180 / Math.PI; }
+  function ringSorted(dist, startAngle) {
+    var ids = [];
+    LAND.forEach(function (c, i) { if (hexDist(c) === dist) ids.push(i); });
+    var rel = function (i) { return ((angleCCW(i) - startAngle) % 360 + 720) % 360; };
+    return ids.sort(function (a, b) { return rel(a) - rel(b); });
+  }
+  // Eckfelder im Gegenuhrzeigersinn, beginnend oben links
+  var CORNERS = (function () {
+    var ids = [];
+    LAND.forEach(function (c, i) { if (hexDist(c) === 2 && NEIGHBORS[i].length === 3) ids.push(i); });
+    var rel = function (i) { return ((angleCCW(i) - 120) % 360 + 720) % 360; };
+    return ids.sort(function (a, b) { return rel(a) - rel(b); });
+  })();
 
-    function tryPlace(order, unique) {
-      var res = new Array(tiles.length).fill(null);
-      var pool = {};
-      CHIPS.forEach(function (n) { pool[n] = (pool[n] || 0) + 1; });
-      var steps = 0;
-      function ok(spot, n) {
-        var nb = NEIGHBORS[spot];
-        for (var i = 0; i < nb.length; i++) {
-          var m = res[nb[i]];
-          if (m === null) continue;
-          if ((n === 6 || n === 8) && (m === 6 || m === 8)) return false;
-          if (unique && m === n) return false;
-        }
-        return true;
-      }
-      function place(idx) {
-        if (idx === order.length) return true;
-        if (++steps > 1500) return false;
-        var spot = order[idx];
-        var cands = shuffle(Object.keys(pool).filter(function (n) { return pool[n] > 0; }).map(Number), rand);
-        for (var c = 0; c < cands.length; c++) {
-          var n = cands[c];
-          if (!ok(spot, n)) continue;
-          res[spot] = n; pool[n]--;
-          if (place(idx + 1)) return true;
-          res[spot] = null; pool[n]++;
-          if (steps > 1500) return false;
-        }
-        return false;
-      }
-      return place(0) ? res : null;
-    }
+  // Reihenfolge aller 19 Felder entlang der Spirale für Startecke 0..5
+  function spiralOrder(corner) {
+    var start = CORNERS[corner];
+    var outer = ringSorted(2, angleCCW(start));
+    var innerStart = NEIGHBORS[start].filter(function (j) { return hexDist(LAND[j]) === 1; })[0];
+    var inner = ringSorted(1, angleCCW(innerStart));
+    return outer.concat(inner, [CENTER]);
   }
 
-  function makePorts(seed) {
-    return shuffle(PORT_DECK, rng("h:" + seed));
+  function makeNumbers(corner, tiles) {
+    var res = new Array(tiles.length).fill(null), k = 0;
+    spiralOrder(corner).forEach(function (i) {
+      if (tiles[i] !== "desert") res[i] = CHIP_ORDER[k++];
+    });
+    return res;
+  }
+
+  function makePorts(seed, opts) {
+    return opts.randomPorts ? shuffle(PORT_DECK, rng("h:" + seed)) : PORT_STANDARD.slice();
   }
 
   function makeBoard(seeds, opts) {
     var tiles = makeTiles(seeds.t, opts);
-    return {
-      tiles: tiles,
-      numbers: makeNumbers(seeds.n, tiles, opts),
-      ports: makePorts(seeds.h)
-    };
+    var corner = ((parseInt(seeds.n, 10) % 6) + 6) % 6 || 0;
+    return { tiles: tiles, corner: corner, numbers: makeNumbers(corner, tiles), ports: makePorts(seeds.h, opts) };
   }
 
   // ---------- Regelprüfung (wird auch in der Oberfläche angezeigt) ----------
-  function check(board, opts) {
+  function check(board) {
     var counts = {};
     board.tiles.forEach(function (t) { counts[t] = (counts[t] || 0) + 1; });
     var tilesOk = counts.forest === 4 && counts.pasture === 4 && counts.fields === 4 &&
       counts.hills === 3 && counts.mountains === 3 && counts.desert === 1 && board.tiles.length === 19;
     var chipsSorted = board.numbers.filter(function (n) { return n !== null; }).sort(function (a, b) { return a - b; });
-    var chipsOk = chipsSorted.join() === CHIPS.slice().sort(function (a, b) { return a - b; }).join() &&
+    var chipsOk = chipsSorted.join() === CHIP_ORDER.slice().sort(function (a, b) { return a - b; }).join() &&
       board.numbers.every(function (n, i) { return (n === null) === (board.tiles[i] === "desert"); });
-    var redOk = true, sameOk = true;
+    var expected = makeNumbers(board.corner, board.tiles);
+    var spiralOk = expected.join() === board.numbers.join();
+    var red = 0;
     NEIGHBORS.forEach(function (nb, i) {
       nb.forEach(function (j) {
+        if (j < i) return;
         var a = board.numbers[i], b = board.numbers[j];
         if (a === null || b === null) return;
-        if ((a === 6 || a === 8) && (b === 6 || b === 8)) redOk = false;
-        if (a === b) sameOk = false;
+        if ((a === 6 || a === 8) && (b === 6 || b === 8)) red++;
       });
     });
     var pc = {};
     board.ports.forEach(function (p) { pc[p] = (pc[p] || 0) + 1; });
     var portsOk = board.ports.length === 9 && pc.any === 4 && pc.wood === 1 && pc.brick === 1 &&
       pc.wool === 1 && pc.grain === 1 && pc.ore === 1;
-    return { tilesOk: tilesOk, chipsOk: chipsOk, redOk: redOk, sameOk: sameOk, portsOk: portsOk };
-  }
-
-  function stats(board) {
-    var out = {};
-    Object.keys(TYPES).forEach(function (k) {
-      if (k !== "desert") out[k] = { tiles: 0, pips: 0, numbers: [] };
-    });
-    board.tiles.forEach(function (t, i) {
-      if (t === "desert") return;
-      out[t].tiles++;
-      out[t].pips += pips(board.numbers[i]);
-      out[t].numbers.push(board.numbers[i]);
-    });
-    Object.keys(out).forEach(function (k) { out[k].numbers.sort(function (a, b) { return a - b; }); });
-    return out;
+    return { tilesOk: tilesOk, chipsOk: chipsOk, spiralOk: spiralOk, redPairs: red, portsOk: portsOk };
   }
 
   var API = {
-    LAND: LAND, SEA: SEA, COAST: COAST, PORT_EDGES: PORT_EDGES, NEIGHBORS: NEIGHBORS, CENTER: CENTER,
-    TYPES: TYPES, PORT_RES: PORT_RES, DIRS: DIRS, HEX_W: HEX_W, HEX_H: HEX_H,
-    pos: pos, pips: pips, newSeed: newSeed, makeBoard: makeBoard, check: check, stats: stats
+    LAND: LAND, COAST: COAST, PORT_EDGES: PORT_EDGES, PORT_STANDARD: PORT_STANDARD, NEIGHBORS: NEIGHBORS, CENTER: CENTER,
+    TYPES: TYPES, PORT_RES: PORT_RES, CHIP_ORDER: CHIP_ORDER, CORNER_NAMES: CORNER_NAMES,
+    HEX_W: HEX_W, HEX_H: HEX_H, pos: pos, pips: pips, newSeed: newSeed, spiralOrder: spiralOrder,
+    makeBoard: makeBoard, check: check
   };
   if (typeof module !== "undefined" && module.exports) module.exports = API;
   else root.CatanCore = API;

@@ -57,11 +57,10 @@ h1 span:nth-child(10){animation-delay:1.08s} h1 span:nth-child(11){animation-del
 }
 .board-card{
   position:sticky; top:14px;
-  background:linear-gradient(160deg,#5aa0d2,#3a78ab); border:5px solid var(--brown); border-radius:34px;
-  box-shadow:0 10px 0 var(--brown), 0 22px 30px rgba(59,42,20,.28); padding:14px 14px 10px;
+  background:linear-gradient(160deg,#e9f6ff,#c9e8fb); border:5px solid var(--brown); border-radius:34px;
+  box-shadow:0 10px 0 var(--brown), 0 22px 30px rgba(59,42,20,.28); padding:14px;
 }
 .board{display:block; width:100%; height:auto; overflow:visible; filter:drop-shadow(0 6px 10px rgba(0,0,0,.25))}
-.hint{margin:6px 0 0; text-align:center; color:#eaf5ff; font-weight:600; font-size:.95rem}
 .side{display:flex; flex-direction:column; gap:20px}
 
 .card{
@@ -92,7 +91,8 @@ button{font-family:inherit; cursor:pointer; color:inherit}
   font-weight:700; font-size:1rem; padding:8px 6px; background:var(--gold); border:3px solid var(--brown); border-radius:14px;
   box-shadow:0 4px 0 var(--gold-d), 0 5px 0 3px var(--brown); transition:transform .1s, box-shadow .1s; margin-bottom:5px;
 }
-.mini:hover,.soft:hover{transform:translateY(-2px)}
+.mini:hover:not(:disabled),.soft:hover{transform:translateY(-2px)}
+.mini:disabled{opacity:.45; cursor:not-allowed; filter:grayscale(.6)}
 .mini:active,.soft:active{transform:translateY(4px); box-shadow:0 0 0 var(--gold-d), 0 1px 0 3px var(--brown)}
 .soft{background:#fff; box-shadow:0 4px 0 #d9c9a0, 0 5px 0 3px var(--brown)}
 .share{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px}
@@ -111,23 +111,7 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace; background:var(--cream-2
 .otext b{display:block; font-size:1.08rem}
 .otext small{display:block; font-size:.88rem; color:var(--brown-2); font-weight:500}
 
-/* ---------- Rohstoff-Waage ---------- */
-.stats,.checks{list-style:none; margin:0; padding:0}
-.stats li{display:flex; align-items:center; gap:12px; padding:8px 8px; border-radius:16px; transition:background .15s, transform .15s; outline:none}
-.stats li:hover,.stats li:focus-visible{background:var(--cream-2); transform:translateX(4px) rotate(-.6deg)}
-.stats img{flex:none; filter:drop-shadow(0 2px 0 rgba(0,0,0,.25))}
-.srow{flex:1; min-width:0}
-.sname{display:flex; justify-content:space-between; gap:8px; align-items:baseline}
-.sname b{font-size:1.1rem}
-.sname span{font-size:.85rem; color:var(--brown-2); font-weight:600}
-.bar{height:11px; margin:3px 0 4px; background:#efe0b4; border:2px solid var(--brown); border-radius:99px; overflow:hidden}
-.bar i{display:block; height:100%; background:linear-gradient(90deg,var(--gold),#ff9d2e); border-radius:99px; transition:width .6s cubic-bezier(.3,1.4,.5,1)}
-.snums{display:flex; flex-wrap:wrap; gap:4px}
-.snums em{font-style:normal; font-weight:800; font-size:.82rem; background:var(--cream); border:2px solid var(--brown); border-radius:99px; min-width:26px; text-align:center; padding:0 5px; font-family:var(--serif)}
-.snums em.red{color:var(--red); border-color:var(--red)}
-.spips{flex:none; text-align:center; font-weight:800; font-size:1.5rem; line-height:1; color:var(--red)}
-.spips small{display:block; font-size:.7rem; color:var(--brown-2); font-weight:600}
-
+.checks{list-style:none; margin:0; padding:0}
 .checks li{display:flex; gap:10px; align-items:flex-start; padding:5px 2px; font-weight:600; font-size:.95rem}
 .checks li span{flex:none; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:800; font-size:.9rem; margin-top:1px; animation:stamp .5s cubic-bezier(.3,1.8,.5,1) both}
 .checks li.ok span{background:var(--green); border:2px solid #2f5a1d}
@@ -153,11 +137,14 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace; background:var(--cream-2
 .plank-o{stroke:#3b2a14; stroke-width:12; stroke-linecap:round}
 .plank{stroke:#c58a47; stroke-width:6.5; stroke-linecap:round}
 
-/* Hervorhebung beim Überfahren der Rohstoffliste */
-.board[data-focus] .tile,.board[data-focus] .chip{opacity:.28}
-.board[data-focus="forest"] [data-type="forest"],.board[data-focus="pasture"] [data-type="pasture"],
-.board[data-focus="fields"] [data-type="fields"],.board[data-focus="hills"] [data-type="hills"],
-.board[data-focus="mountains"] [data-type="mountains"]{opacity:1; filter:drop-shadow(0 0 10px #fff8c8) brightness(1.1)}
+/* Meer, Strand, Stege */
+.board .waves path{fill:none; stroke:#fff; stroke-width:2.4; stroke-linecap:round; opacity:.28}
+.board .seam{fill:none; stroke:#0f5f9c; stroke-width:3; opacity:.55}
+.board .shallows polygon{fill:#8fe0ff; opacity:.55}
+.board .beach polygon{fill:#f1d9a0}
+.board .jet-o{stroke:#3b2a14; stroke-width:22; stroke-linecap:butt}
+.board .jet{stroke:#c9965a; stroke-width:16; stroke-linecap:butt}
+.board .jet-p{stroke:#7b5427; stroke-width:16; stroke-dasharray:3 9; opacity:.55}
 
 /* ---------- Sonstiges ---------- */
 .toast{
@@ -179,7 +166,16 @@ footer{text-align:center; padding:6px 16px 34px; color:var(--brown-2); font-size
 }
 @media print{
   body{background:#fff}
-  .hero,.side,.hint,footer,.toast{display:none}
+  .hero,.side,footer,.toast{display:none}
   .layout{display:block; padding:0}
   .board-card{position:static; box-shadow:none; border:none; background:none}
 }
+
+.startline{margin:10px 0 0; text-align:center; font-weight:600; color:var(--brown-2); font-size:.95rem}
+.startline b{color:var(--red)}
+.order{margin-top:12px}
+.order b{display:block; margin-bottom:6px}
+#chip-order{display:flex; flex-wrap:wrap; gap:5px}
+#chip-order span{display:inline-flex; flex-direction:column; align-items:center; min-width:34px; padding:2px 4px; background:var(--cream); border:2px solid var(--brown); border-radius:12px; font-family:var(--serif); font-weight:800; line-height:1.1}
+#chip-order span i{font-style:normal; font-family:var(--font); font-size:.62rem; color:var(--brown-2); font-weight:700}
+#chip-order span.red{color:var(--red); border-color:var(--red)}
