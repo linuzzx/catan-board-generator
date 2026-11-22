@@ -1,12 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 120" width="130" height="120">
-<ellipse cx="66" cy="104" rx="52" ry="9" fill="#0b3d66" opacity=".28"/>
-<path d="M8,84 Q66,112 122,80 L110,98 Q66,118 22,100 Z" fill="#8f5d2c" stroke="#3b2a14" stroke-width="3" stroke-linejoin="round"/>
-<path d="M14,86 Q66,108 118,82" fill="none" stroke="#c28a4c" stroke-width="3" stroke-linecap="round"/>
-<line x1="64" y1="6" x2="64" y2="90" stroke="#3b2a14" stroke-width="5" stroke-linecap="round"/>
-<line x1="64" y1="6" x2="64" y2="90" stroke="#9b6a38" stroke-width="2.4" stroke-linecap="round"/>
-<path d="M68,12 C112,24 114,68 70,82 L28,82 C14,52 28,22 68,12 Z" fill="#fff3d6" stroke="#3b2a14" stroke-width="3" stroke-linejoin="round"/>
-<path d="M68,12 C104,22 108,50 98,66" fill="none" stroke="#fff" stroke-width="3" opacity=".7" stroke-linecap="round"/>
-<g transform="translate(46 17) scale(.37)"><rect x="30" y="62" width="5" height="14" fill="#3a3030"/><rect x="60" y="62" width="5" height="14" fill="#3a3030"/><ellipse cx="50" cy="52" rx="26" ry="18" fill="#fff" stroke="#8a8372" stroke-width="2"/><circle cx="34" cy="44" r="11" fill="#fff" stroke="#8a8372" stroke-width="1.5"/><circle cx="50" cy="38" r="12" fill="#fff" stroke="#8a8372" stroke-width="1.5"/><circle cx="66" cy="44" r="11" fill="#fff" stroke="#8a8372" stroke-width="1.5"/><ellipse cx="25" cy="50" rx="10" ry="8.5" fill="#3a3030"/><circle cx="22" cy="48" r="1.8" fill="#fff"/></g>
-<text x="66" y="72" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="18" fill="#2a2118">2:1</text>
-<path d="M64,6 L84,12 L64,18 Z" fill="#c4161c" stroke="#3b2a14" stroke-width="1.5" stroke-linejoin="round"/>
+<ellipse cx="65" cy="106" rx="52" ry="8" fill="#6cc3f0" opacity=".85"/>
+<path d="M18,84 C22,98 40,104 65,104 C90,104 108,98 112,84 L104,80 L26,80Z" fill="#b57a45" stroke="#7a4a22" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M26,80 L104,80 L110,86 C100,94 84,97 65,97 C46,97 30,94 20,86Z" fill="#c98f58"/>
+<path d="M92,76 L112,76 L116,88 L104,84Z" fill="#b57a45" stroke="#7a4a22" stroke-width="2"/>
+<clipPath id="barrel"><path d="M38,20 V84 Q38,92 65,92 Q92,92 92,84 V20Z"/></clipPath>
+<g clip-path="url(#barrel)"><rect x="38" y="10" width="54" height="90" fill="#f8f6f1"/><rect x="38" y="16" width="54" height="40" fill="#8cc21c"/><g transform="translate(65 40) scale(.62)" stroke="#8c9a3a" stroke-width="1.4"><path d="M-16,2 C-18,-10 -6,-14 0,-12 C8,-16 18,-10 17,0 C18,8 8,12 0,10 C-8,12 -15,8 -16,2Z" fill="#fff"/><ellipse cx="19" cy="-3" rx="6" ry="5.5" fill="#8e9398" stroke="none"/></g></g>
+<path d="M38,20 V84 Q38,92 65,92 Q92,92 92,84 V20" fill="none" stroke="#3a3a3a" stroke-opacity=".55" stroke-width="2"/>
+<ellipse cx="65" cy="19" rx="27" ry="6" fill="#8cc21c" stroke="#3a3a3a" stroke-opacity=".55" stroke-width="2"/>
+<text x="65" y="73" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="15" fill="#5a2a2a">2:1</text>
 </svg>

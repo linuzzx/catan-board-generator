@@ -130,14 +130,14 @@
       });
       var sx = land.x + nx * (86.6 + 98), sy = land.y + ny * (86.6 + 98);
       g += '<g class="port' + (anim.ports[k] ? " pop" : "") + '" style="--d:' + (anim.ports[k] ? base + pd++ * 60 : 0) + 'ms"><title>' + label + "</title>" + jet +
-        img("ship-" + kind, sx, sy - 6, 132, 122) + "</g>";
+        img("ship-" + kind, sx, sy - 6, 156, 144) + "</g>";
     });
 
     var cd = 0, cbase = d * 45 + 250;
     L.land.forEach(function (c, i) {
       var n = b.numbers[i];
       if (n === null) return;
-      g += '<g class="chip' + (anim.chips[i] ? " drop" : "") + '" style="--d:' + (anim.chips[i] ? cbase + cd++ * 40 : 0) + 'ms">' + img("chip-" + n, c.x, c.y + 4, 74, 74) + "</g>";
+      g += '<g class="chip' + (anim.chips[i] ? " drop" : "") + '" style="--d:' + (anim.chips[i] ? cbase + cd++ * 40 : 0) + 'ms">' + img("chip-" + n, c.x, c.y + 30, 84, 84) + "</g>";
     });
 
     $("#board").innerHTML = frameSvg(C.frameOutline(b.mode, 154)) + g;

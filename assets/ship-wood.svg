@@ -1,12 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 120" width="130" height="120">
-<ellipse cx="66" cy="104" rx="52" ry="9" fill="#0b3d66" opacity=".28"/>
-<path d="M8,84 Q66,112 122,80 L110,98 Q66,118 22,100 Z" fill="#8f5d2c" stroke="#3b2a14" stroke-width="3" stroke-linejoin="round"/>
-<path d="M14,86 Q66,108 118,82" fill="none" stroke="#c28a4c" stroke-width="3" stroke-linecap="round"/>
-<line x1="64" y1="6" x2="64" y2="90" stroke="#3b2a14" stroke-width="5" stroke-linecap="round"/>
-<line x1="64" y1="6" x2="64" y2="90" stroke="#9b6a38" stroke-width="2.4" stroke-linecap="round"/>
-<path d="M68,12 C112,24 114,68 70,82 L28,82 C14,52 28,22 68,12 Z" fill="#fff3d6" stroke="#3b2a14" stroke-width="3" stroke-linejoin="round"/>
-<path d="M68,12 C104,22 108,50 98,66" fill="none" stroke="#fff" stroke-width="3" opacity=".7" stroke-linecap="round"/>
-<g transform="translate(46 17) scale(.37)"><path d="M20,54 H52 V74 H20 A10,10 0 0 1 20,54 Z" fill="#9b6a38" stroke="#4d2f14" stroke-width="2" stroke-linejoin="round"/><path d="M16,59 h30 M16,67 h30" stroke="#6e4620" stroke-width="1.2" opacity=".6"/><ellipse cx="52" cy="64" rx="7" ry="10" fill="#e3b878" stroke="#4d2f14" stroke-width="2"/><ellipse cx="52" cy="64" rx="3.2" ry="5" fill="none" stroke="#a87b45" stroke-width="1.2"/><path d="M48,54 H80 V74 H48 A10,10 0 0 1 48,54 Z" fill="#9b6a38" stroke="#4d2f14" stroke-width="2" stroke-linejoin="round"/><path d="M44,59 h30 M44,67 h30" stroke="#6e4620" stroke-width="1.2" opacity=".6"/><ellipse cx="80" cy="64" rx="7" ry="10" fill="#e3b878" stroke="#4d2f14" stroke-width="2"/><ellipse cx="80" cy="64" rx="3.2" ry="5" fill="none" stroke="#a87b45" stroke-width="1.2"/><path d="M34,32 H66 V52 H34 A10,10 0 0 1 34,32 Z" fill="#9b6a38" stroke="#4d2f14" stroke-width="2" stroke-linejoin="round"/><path d="M30,37 h30 M30,45 h30" stroke="#6e4620" stroke-width="1.2" opacity=".6"/><ellipse cx="66" cy="42" rx="7" ry="10" fill="#e3b878" stroke="#4d2f14" stroke-width="2"/><ellipse cx="66" cy="42" rx="3.2" ry="5" fill="none" stroke="#a87b45" stroke-width="1.2"/></g>
-<text x="66" y="72" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="18" fill="#2a2118">2:1</text>
-<path d="M64,6 L84,12 L64,18 Z" fill="#c4161c" stroke="#3b2a14" stroke-width="1.5" stroke-linejoin="round"/>
+<ellipse cx="65" cy="106" rx="52" ry="8" fill="#6cc3f0" opacity=".85"/>
+<path d="M18,84 C22,98 40,104 65,104 C90,104 108,98 112,84 L104,80 L26,80Z" fill="#b57a45" stroke="#7a4a22" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M26,80 L104,80 L110,86 C100,94 84,97 65,97 C46,97 30,94 20,86Z" fill="#c98f58"/>
+<path d="M92,76 L112,76 L116,88 L104,84Z" fill="#b57a45" stroke="#7a4a22" stroke-width="2"/>
+<clipPath id="barrel"><path d="M38,20 V84 Q38,92 65,92 Q92,92 92,84 V20Z"/></clipPath>
+<g clip-path="url(#barrel)"><rect x="38" y="10" width="54" height="90" fill="#f8f6f1"/><rect x="38" y="16" width="54" height="40" fill="#229a35"/><g transform="translate(65 40) scale(.78)" stroke="#2c7a2a" stroke-width="1.2"><polygon points="0,-16 11,-3 5,-3 13,8 -13,8 -5,-3 -11,-3" fill="#b4f08a"/><rect x="-2.5" y="8" width="5" height="6" fill="#b4f08a"/></g></g>
+<path d="M38,20 V84 Q38,92 65,92 Q92,92 92,84 V20" fill="none" stroke="#3a3a3a" stroke-opacity=".55" stroke-width="2"/>
+<ellipse cx="65" cy="19" rx="27" ry="6" fill="#229a35" stroke="#3a3a3a" stroke-opacity=".55" stroke-width="2"/>
+<text x="65" y="73" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="15" fill="#5a2a2a">2:1</text>
 </svg>
