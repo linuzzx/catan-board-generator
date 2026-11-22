@@ -142,9 +142,9 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace; background:var(--cream-2
 .board .seam{fill:none; stroke:#0f5f9c; stroke-width:3; opacity:.55}
 .board .shallows polygon{fill:#8fe0ff; opacity:.55}
 .board .beach polygon{fill:#f1d9a0}
-.board .jet-o{stroke:#3b2a14; stroke-width:22; stroke-linecap:butt}
-.board .jet{stroke:#c9965a; stroke-width:16; stroke-linecap:butt}
-.board .jet-p{stroke:#7b5427; stroke-width:16; stroke-dasharray:3 9; opacity:.55}
+.board .jet-o{stroke:#6e4421; stroke-width:15; stroke-linecap:butt}
+.board .jet{stroke:#c28a55; stroke-width:11; stroke-linecap:butt}
+.board .jet-p{stroke:#8a5628; stroke-width:1.6; opacity:.8}
 
 /* ---------- Sonstiges ---------- */
 .toast{

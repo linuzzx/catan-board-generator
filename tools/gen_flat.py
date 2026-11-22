@@ -83,12 +83,12 @@ def make_tiles():
             x, y = rnd.uniform(20, W-20), rnd.uniform(24, H-24)
             s += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{rnd.uniform(.8,1.8):.1f}" fill="{col}" opacity="{op}"/>'
         return s
-    tiles["forest"] = tile(pine(CX, 52, 1.35) + tuft(36, 84, "#0f5a1c") + tuft(137, 84, "#0f5a1c") + speck("#0b4a15"), "f", "#37a540", "#1f8a2e", "#4fc157", "#146326")
-    tiles["pasture"] = tile(sheep(CX - 4, 50, 1.3) + tuft(34, 84, "#4a8a10") + tuft(139, 84, "#4a8a10") + speck("#4a8a10"), "p", "#8cc21c", "#6fa512", "#dfe400", "#4f8a0c")
-    tiles["fields"] = tile(wheat(CX, 62, 1.0) + tuft(36, 84, "#c28a14") + tuft(137, 84, "#c28a14") + speck("#b27a0e"), "a", "#fbc93a", "#eba81c", "#fde065", "#c98512")
-    tiles["hills"] = tile(bricks(CX, 48, 1.15) + pebbles(30, 84) + pebbles(132, 80) + speck("#8e2f10"), "h", "#ef7437", "#dd5a22", "#f8924a", "#b03e14")
-    tiles["mountains"] = tile(rocks(CX, 52, 1.25) + pebbles(30, 84, "#c9c5c0", "#807a74") + pebbles(132, 84, "#c9c5c0", "#807a74") + speck("#6e6e6c"), "m", "#b6b8b6", "#9a9c9a", "#c9cbc9", "#74767a")
-    tiles["desert"] = tile(cactus_flat(CX + 6, 52, 1.1) + '<path d="M30,84 q8,-6 16,-2 M40,80 l4,-6" stroke="#a58c58" stroke-width="2" fill="none" stroke-linecap="round"/>' + speck("#a58c58"), "d", "#e0d596", "#cdbf7a", "#e8dfae", "#a99a58")
+    tiles["forest"] = tile(pine(CX, 62, 1.35) + tuft(36, 92, "#0f5a1c") + tuft(137, 92, "#0f5a1c") + speck("#0b4a15"), "f", "#37a540", "#1f8a2e", "#4fc157", "#146326")
+    tiles["pasture"] = tile(sheep(CX - 4, 60, 1.3) + tuft(34, 92, "#4a8a10") + tuft(139, 92, "#4a8a10") + speck("#4a8a10"), "p", "#8cc21c", "#6fa512", "#dfe400", "#4f8a0c")
+    tiles["fields"] = tile(wheat(CX, 72, 1.0) + tuft(36, 92, "#c28a14") + tuft(137, 92, "#c28a14") + speck("#b27a0e"), "a", "#fbc93a", "#eba81c", "#fde065", "#c98512")
+    tiles["hills"] = tile(bricks(CX, 58, 1.15) + pebbles(30, 84) + pebbles(132, 80) + speck("#8e2f10"), "h", "#ef7437", "#dd5a22", "#f8924a", "#b03e14")
+    tiles["mountains"] = tile(rocks(CX, 62, 1.25) + pebbles(30, 92, "#c9c5c0", "#807a74") + pebbles(132, 92, "#c9c5c0", "#807a74") + speck("#6e6e6c"), "m", "#b6b8b6", "#9a9c9a", "#c9cbc9", "#74767a")
+    tiles["desert"] = tile(cactus_flat(CX + 6, 62, 1.1) + '<path d="M30,84 q8,-6 16,-2 M40,80 l4,-6" stroke="#a58c58" stroke-width="2" fill="none" stroke-linecap="round"/>' + speck("#a58c58"), "d", "#e0d596", "#cdbf7a", "#e8dfae", "#a99a58")
     return tiles
 
 # ---------- Zahlenplättchen (abgerundetes Quadrat) ----------
@@ -120,23 +120,26 @@ def port_icon(kind, cx, cy):
 
 TOP = {"any": "#2f6fe0", "wood": "#229a35", "brick": "#e8642a", "wool": "#8cc21c", "grain": "#f2b72b", "ore": "#a5a7a5"}
 def ship(kind):
+    """Fass im Holzboot, Bezugspunkt der Bootsmitte: (65, 94)."""
     top = TOP[kind]
     if kind == "any":
-        body = f'<rect x="38" y="16" width="54" height="22" fill="{top}"/><text x="65" y="63" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="25" fill="#5a2a2a">3:1</text>'
+        body = f'<rect x="38" y="16" width="54" height="22" fill="{top}"/><text x="65" y="66" text-anchor="middle" font-family="\'Arial Black\',Impact,sans-serif" font-weight="900" font-size="24" fill="#5a2a2a">3:1</text>'
         lbl = ""
     else:
         body = f'<rect x="38" y="16" width="54" height="40" fill="{top}"/>{port_icon(kind, 65, 40)}'
-        lbl = '<text x="65" y="73" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="15" fill="#5a2a2a">2:1</text>'
+        lbl = '<text x="65" y="76" text-anchor="middle" font-family="\'Arial Black\',Impact,sans-serif" font-weight="900" font-size="17" fill="#5a2a2a">2:1</text>'
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 120" width="130" height="120">
-<ellipse cx="65" cy="106" rx="52" ry="8" fill="#6cc3f0" opacity=".85"/>
-<path d="M18,84 C22,98 40,104 65,104 C90,104 108,98 112,84 L104,80 L26,80Z" fill="#b57a45" stroke="#7a4a22" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M26,80 L104,80 L110,86 C100,94 84,97 65,97 C46,97 30,94 20,86Z" fill="#c98f58"/>
-<path d="M92,76 L112,76 L116,88 L104,84Z" fill="#b57a45" stroke="#7a4a22" stroke-width="2"/>
-<clipPath id="barrel"><path d="M38,20 V84 Q38,92 65,92 Q92,92 92,84 V20Z"/></clipPath>
-<g clip-path="url(#barrel)"><rect x="38" y="10" width="54" height="90" fill="#f8f6f1"/>{body}</g>
-<path d="M38,20 V84 Q38,92 65,92 Q92,92 92,84 V20" fill="none" stroke="#3a3a3a" stroke-opacity=".55" stroke-width="2"/>
-<ellipse cx="65" cy="19" rx="27" ry="6" fill="{top}" stroke="#3a3a3a" stroke-opacity=".55" stroke-width="2"/>
+<ellipse cx="65" cy="100" rx="60" ry="12" fill="#6cc4f2" opacity=".9"/>
+<ellipse cx="65" cy="100" rx="50" ry="8" fill="#9ad8f7" opacity=".55"/>
+<clipPath id="barrel"><path d="M38,20 V90 H92 V20Z"/></clipPath>
+<g clip-path="url(#barrel)"><rect x="38" y="10" width="54" height="90" fill="#f4f2ec"/>{body}</g>
+<path d="M38,20 V90 M92,20 V90" fill="none" stroke="#3a3a3a" stroke-opacity=".5" stroke-width="2"/>
+<ellipse cx="65" cy="19" rx="27" ry="6" fill="{top}" stroke="#3a3a3a" stroke-opacity=".5" stroke-width="2"/>
 {lbl}
+<path d="M10,78 Q65,94 120,78 Q116,100 92,107 Q65,113 38,107 Q14,100 10,78Z" fill="#b97b46" stroke="#6e4421" stroke-width="2.6" stroke-linejoin="round"/>
+<path d="M18,93 Q65,106 112,93 M30,101 Q65,110 100,101" fill="none" stroke="#8a5628" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M10,78 Q65,94 120,78" fill="none" stroke="#e2b67c" stroke-width="5" stroke-linecap="round"/>
+<path d="M10,78 Q65,94 120,78" fill="none" stroke="#6e4421" stroke-width="1.6" stroke-linecap="round" opacity=".5" transform="translate(0 3)"/>
 </svg>'''
 
 if __name__ == "__main__":

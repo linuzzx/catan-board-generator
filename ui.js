@@ -115,22 +115,17 @@
         "<title>" + title + "</title>" + img(TYPE_IMG[t], c.x, c.y, HW + 0.6, HH + 0.6) + "</g>";
     });
 
-    var pd = 0, base = d * 45 + 150;
+    var pd = 0, base = d * 45 + 150, SS = C.SHIP_S;
     L.portEdges.forEach(function (e, k) {
-      var land = L.land[e.land];
-      var th = Math.atan2(e.sea.y - land.y, e.sea.x - land.x), nx = Math.cos(th), ny = Math.sin(th);
-      var kind = b.ports[k];
+      var pp = L.portPlace[k], kind = b.ports[k];
       var label = kind === "any" ? "3:1-Hafen (beliebiger Rohstoff)" : "2:1-Hafen (" + C.PORT_RES[kind] + ")";
       var jet = "";
-      [-1, 1].forEach(function (s) {
-        var vx = land.x + 100 * Math.cos(th + s * Math.PI / 6), vy = land.y + 100 * Math.sin(th + s * Math.PI / 6);
-        var ex = vx + nx * 74, ey = vy + ny * 74;
-        var dd = 'x1="' + vx.toFixed(1) + '" y1="' + vy.toFixed(1) + '" x2="' + ex.toFixed(1) + '" y2="' + ey.toFixed(1) + '"';
+      pp.jets.forEach(function (j) {
+        var dd = 'x1="' + j.x1.toFixed(1) + '" y1="' + j.y1.toFixed(1) + '" x2="' + j.x2.toFixed(1) + '" y2="' + j.y2.toFixed(1) + '"';
         jet += "<line " + dd + ' class="jet-o"/><line ' + dd + ' class="jet"/><line ' + dd + ' class="jet-p"/>';
       });
-      var sx = land.x + nx * (86.6 + 98), sy = land.y + ny * (86.6 + 98);
       g += '<g class="port' + (anim.ports[k] ? " pop" : "") + '" style="--d:' + (anim.ports[k] ? base + pd++ * 60 : 0) + 'ms"><title>' + label + "</title>" + jet +
-        img("ship-" + kind, sx, sy - 6, 156, 144) + "</g>";
+        img("ship-" + kind, pp.x, pp.y - 34 * SS, 130 * SS, 120 * SS) + "</g>";
     });
 
     var cd = 0, cbase = d * 45 + 250;
@@ -140,7 +135,7 @@
       g += '<g class="chip' + (anim.chips[i] ? " drop" : "") + '" style="--d:' + (anim.chips[i] ? cbase + cd++ * 40 : 0) + 'ms">' + img("chip-" + n, c.x, c.y + 30, 84, 84) + "</g>";
     });
 
-    $("#board").innerHTML = frameSvg(C.frameOutline(b.mode, 154)) + g;
+    $("#board").innerHTML = frameSvg(C.frameOutline(b.mode, 60)) + g;
     renderInfo();
   }
 

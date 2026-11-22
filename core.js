@@ -48,6 +48,48 @@
     }
   };
 
+  // ---------- Hafenplatz: Schiff und Stege ohne Überschneidungen ----------
+  var SHIP_S = 0.98;                                   // Skalierung der Schiffsgrafik (130x120)
+  // Umriss relativ zur Bootsmitte (Schiffsgrafik: Barrel x ±27, y -81..-8; Rumpf x ±55, y -16..16)
+  var SHIP_RECTS = [[-27, 27, -81, -8], [-55, 55, -16, 16]].map(function (r) { return r.map(function (v) { return v * SHIP_S; }); });
+  var SHIP_BOX = { x0: -55 * SHIP_S, x1: 55 * SHIP_S, y0: -81 * SHIP_S, y1: 16 * SHIP_S };
+  function inShip(x, y, pad) {
+    return SHIP_RECTS.some(function (r) { return x > r[0] - pad && x < r[1] + pad && y > r[2] - pad && y < r[3] + pad; });
+  }
+  function insideHex(px, py, c, r) {
+    var ax = Math.abs(px - c.x), ay = Math.abs(py - c.y);
+    return ax <= r * Math.sqrt(3) / 2 && ay <= r - ax / Math.sqrt(3);
+  }
+  function placePort(L, e) {
+    var land = L.land[e.land];
+    var th = Math.atan2(e.sea.y - land.y, e.sea.x - land.x), nx = Math.cos(th), ny = Math.sin(th);
+    var hit = function (px, py) {
+      for (var x = SHIP_BOX.x0; x <= SHIP_BOX.x1; x += 4) for (var y = SHIP_BOX.y0; y <= SHIP_BOX.y1; y += 4) {
+        if (!inShip(x, y, 0)) continue;
+        for (var k = 0; k < L.land.length; k++) if (insideHex(px + x, py + y, L.land[k], 106)) return true;
+      }
+      return false;
+    };
+    var D = 60, px, py;
+    for (; D < 220; D += 2) {
+      px = land.x + nx * (86.6 + D); py = land.y + ny * (86.6 + D);
+      if (!hit(px, py)) break;
+    }
+    D += 12; px = land.x + nx * (86.6 + D); py = land.y + ny * (86.6 + D); // etwas Luft zum Ufer, damit die Stege sichtbar lang sind
+    // beide Stege enden gleich weit: dort, wo der erste das Schiff berührt (höchstens kurz hinter der Bootsmitte)
+    var starts = [-1, 1].map(function (s) {
+      return [land.x + 100 * Math.cos(th + s * Math.PI / 6), land.y + 100 * Math.sin(th + s * Math.PI / 6)];
+    });
+    var tEnd = D + 20;
+    starts.forEach(function (v) {
+      for (var t = 0; t < tEnd; t += 2) {
+        if (inShip(v[0] + nx * (t + 2) - px, v[1] + ny * (t + 2) - py, 7)) { tEnd = t; break; }
+      }
+    });
+    var jets = starts.map(function (v) { return { x1: v[0], y1: v[1], x2: v[0] + nx * tEnd, y2: v[1] + ny * tEnd }; });
+    return { x: px, y: py, th: th, jets: jets };
+  }
+
   // ---------- Layout ----------
   var layoutCache = {};
   function buildLayout(mode) {
@@ -104,6 +146,7 @@
 
     var L = { mode: mode, land: land, neighbors: neighbors, coast: coast, rings: rings, corners: corners, ang: ang };
     L.portEdges = MODES[mode].portEdgeIdx.map(function (i) { return coast[i]; });
+    L.portPlace = L.portEdges.map(function (e) { return placePort(L, e); });
     layoutCache[mode] = L;
     return L;
   }
@@ -115,7 +158,13 @@
     var ap = normals.map(function (n) {
       var m = -Infinity;
       L.land.forEach(function (c) { m = Math.max(m, n[0] * c.x + n[1] * c.y); });
-      return m + 100 + margin;
+      var sm = -Infinity;
+      L.portPlace.forEach(function (p) {
+        [[SHIP_BOX.x0, SHIP_BOX.y0], [SHIP_BOX.x1, SHIP_BOX.y0], [SHIP_BOX.x0, SHIP_BOX.y1], [SHIP_BOX.x1, SHIP_BOX.y1]].forEach(function (q) {
+          sm = Math.max(sm, n[0] * (p.x + q[0]) + n[1] * (p.y + q[1]));
+        });
+      });
+      return Math.max(m + 100 + margin, sm + 40);
     });
     for (var k = 0; k < 6; k++) {
       var n1 = normals[k], n2 = normals[(k + 1) % 6], a1 = ap[k], a2 = ap[(k + 1) % 6];
@@ -238,7 +287,7 @@
   var API = {
     MODES: MODES, TYPES: TYPES, PORT_RES: PORT_RES, CORNER_NAMES: CORNER_NAMES,
     HEX_W: HEX_W, HEX_H: HEX_H, pips: pips, newSeed: newSeed,
-    layout: buildLayout, frameOutline: frameOutline, spiralOrder: spiralOrder,
+    layout: buildLayout, SHIP_S: SHIP_S, SHIP_BOX: SHIP_BOX, frameOutline: frameOutline, spiralOrder: spiralOrder,
     makeBoard: makeBoard, check: check
   };
   if (typeof module !== "undefined" && module.exports) module.exports = API;
