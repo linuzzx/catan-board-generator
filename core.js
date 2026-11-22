@@ -284,7 +284,28 @@
     return { tilesOk: tilesOk, chipsOk: chipsOk, spiralOk: spiralOk, redPairs: red, portsOk: portsOk };
   }
 
+  // Kreuzungen, an denen drei Landfelder zusammenstoßen, samt Augensumme der Zahlen (Wüste = 0)
+  function vertexSpots(board) {
+    var L = buildLayout(board.mode), out = [];
+    var pip = function (i) { return board.numbers[i] === null ? 0 : pips(board.numbers[i]); };
+    L.neighbors.forEach(function (nb, i) {
+      nb.forEach(function (j) {
+        if (j <= i) return;
+        nb.forEach(function (k) {
+          if (k <= j || L.neighbors[j].indexOf(k) < 0) return;
+          out.push({
+            x: (L.land[i].x + L.land[j].x + L.land[k].x) / 3,
+            y: (L.land[i].y + L.land[j].y + L.land[k].y) / 3,
+            sum: pip(i) + pip(j) + pip(k)
+          });
+        });
+      });
+    });
+    return out;
+  }
+
   var API = {
+    vertexSpots: vertexSpots,
     MODES: MODES, TYPES: TYPES, PORT_RES: PORT_RES, CORNER_NAMES: CORNER_NAMES,
     HEX_W: HEX_W, HEX_H: HEX_H, pips: pips, newSeed: newSeed,
     layout: buildLayout, SHIP_S: SHIP_S, SHIP_BOX: SHIP_BOX, frameOutline: frameOutline, spiralOrder: spiralOrder,

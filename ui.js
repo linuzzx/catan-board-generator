@@ -7,7 +7,7 @@
   var HW = C.HEX_W, HH = C.HEX_H;
   var TYPE_IMG = { forest: "hex-forest", pasture: "hex-pasture", fields: "hex-fields", hills: "hex-hills", mountains: "hex-mountains", desert: "hex-desert" };
 
-  var state = { mode: "34", seeds: { t: "", n: "0", h: "" }, opts: { desertCenter: false, randomPorts: false }, board: null };
+  var state = { mode: "34", seeds: { t: "", n: "0", h: "" }, opts: { desertCenter: false, randomPorts: false }, helper: false, board: null };
   var prev = null; // zuletzt gerendertes Brett, damit nur Neues animiert wird
 
   // ---------- URL <-> Zustand ----------
@@ -23,6 +23,7 @@
     state.mode = p.get("p") === "56" ? "56" : "34";
     state.opts.desertCenter = p.get("d") === "1";
     state.opts.randomPorts = p.get("r") === "1";
+    state.helper = p.get("helper") === "1";
   }
   function writeHash() {
     var p = new URLSearchParams();
@@ -31,6 +32,7 @@
     if (state.opts.randomPorts) p.set("h", state.seeds.h);
     if (state.opts.desertCenter) p.set("d", "1");
     if (state.opts.randomPorts) p.set("r", "1");
+    if (state.helper) p.set("helper", "1");
     history.replaceState(null, "", "#" + p.toString());
   }
 
@@ -135,6 +137,17 @@
       g += '<g class="chip' + (anim.chips[i] ? " drop" : "") + '" style="--d:' + (anim.chips[i] ? cbase + cd++ * 40 : 0) + 'ms">' + img("chip-" + n, c.x, c.y + 30, 84, 84) + "</g>";
     });
 
+    if (state.helper) {
+      // Geheimer Helfer: Kreuzungen mit mehr als 10 Augen, je näher an 12, desto röter
+      var hs = "";
+      C.vertexSpots(b).forEach(function (v) {
+        if (v.sum <= 10) return;
+        var dist = Math.min(2, Math.abs(v.sum - 12)), col = ["#e0101a", "#f06a24", "#f5b52e"][dist];
+        hs += '<g class="spot"><circle cx="' + v.x.toFixed(1) + '" cy="' + v.y.toFixed(1) + '" r="' + (19 - dist * 2) + '" fill="' + col + '" fill-opacity=".88" stroke="#fff" stroke-width="3"/>' +
+          '<text x="' + v.x.toFixed(1) + '" y="' + (v.y + 6).toFixed(1) + '" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="17" fill="#fff" stroke="#3b2a14" stroke-width=".8" paint-order="stroke">' + v.sum + "</text></g>";
+      });
+      g += hs;
+    }
     $("#board").innerHTML = frameSvg(C.frameOutline(b.mode, 60)) + g;
     renderInfo();
   }
