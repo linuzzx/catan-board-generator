@@ -135,15 +135,17 @@ def gen_hills():
     for _ in range(50):
         x, y = rnd.uniform(10, W-10), rnd.uniform(60, 190)
         inner += f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{rnd.uniform(.8,2):.1f}" fill="#5e2a12" opacity=".3"/>'
-    # Ziegelpyramide (3-2-1), mittig im sicheren Bereich
-    bx, by = CX - 48, 77
-    rows = [(0, 3), (1, 2), (2, 1)]
-    for r_, n in rows:
+    # große Ziegelpyramide (4-3-2-1): Fuß und Stufen bleiben auch unter dem Zahlenchip sichtbar
+    bw, bh, base_y = 34, 17, 142
+    for r_, n in enumerate([4, 3, 2, 1]):
+        y = base_y - r_ * (bh + 1)
+        x0 = CX - n * (bw + 1) / 2 + 0.5
         for k in range(n):
-            x = bx + 7 + (r_ * 14) + k * 28
-            y = by + 24 - r_ * 14
-            inner += f'<rect x="{x:.1f}" y="{y}" width="26" height="12" rx="1.5" fill="#d9652a" stroke="#6e2a10" stroke-width="1.4"/><rect x="{x+2:.1f}" y="{y+1.8}" width="22" height="3" fill="#f39a60" opacity=".85"/>'
-    inner += f'<ellipse cx="{CX}" cy="{by+40}" rx="48" ry="5" fill="#000" opacity=".18"/>'
+            x = x0 + k * (bw + 1)
+            inner += (f'<rect x="{x:.1f}" y="{y}" width="{bw}" height="{bh}" rx="2.5" fill="#dc6a2c" stroke="#6e2a10" stroke-width="1.8"/>'
+                      f'<rect x="{x+2.5:.1f}" y="{y+2.5}" width="{bw-5}" height="4" rx="1.5" fill="#f6a56a" opacity=".85"/>'
+                      f'<rect x="{x+2.5:.1f}" y="{y+bh-5}" width="{bw-5}" height="2.5" fill="#8f3a15" opacity=".35"/>')
+    inner += f'<ellipse cx="{CX}" cy="{base_y+bh+4}" rx="84" ry="6" fill="#000" opacity=".2"/>'
     return hex_tile(inner, gid="hills", c1=C["hills1"], c2=C["hills2"])
 
 # ---------- Gebirge (Erz) ----------
@@ -178,9 +180,6 @@ def gen_mountains():
     inner += peak2(72, 148, 104, 64, "#8f8ca1", "#656278") + peak2(142, 144, 64, 38, "#8f8ca1", "#656278")
     # vorderste Reihe: am niedrigsten und dunkelsten
     inner += peak2(30, 170, 60, 26, "#7d7a8f", "#575468") + peak2(108, 172, 92, 42, "#7d7a8f", "#575468")
-    for x, y, s_ in [(60, 172, 1.05), (146, 174, .9)]:
-        inner += (f'<g transform="translate({x} {y}) scale({s_})"><polygon points="-12,6 -8,-6 2,-9 12,-2 10,7" fill="#6e665a" stroke="#3a342b" stroke-width="1.2"/>'
-                  f'<polygon points="-8,-6 2,-9 0,-1" fill="#b3aa97"/><polygon points="2,-9 12,-2 6,0" fill="#8c8372"/></g>')
     return hex_tile(inner, gid="mount", c1=C["mount1"], c2=C["mount2"])
 
 # ---------- Wüste ----------
@@ -191,6 +190,28 @@ def cactus(x, y, s):
             f'<path d="M-5,2 h-8 v-12 a4,4 0 0 1 8,0" fill="#4e8a35"/>'
             f'<path d="M5,8 h8 v-14 a4,4 0 0 0 -8,0" fill="#4e8a35"/></g>')
 
+def skull(cx, cy, k=1.0):
+    """Gebleichter Rinderschädel mit Hörnern, halb im Sand versunken."""
+    return f'''<g transform="translate({cx} {cy}) scale({k})" stroke="#5e4a2a" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<defs><linearGradient id="bone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset=".6" stop-color="#efe3c4"/><stop offset="1" stop-color="#cdbb92"/></linearGradient></defs>
+<ellipse cx="0" cy="44" rx="50" ry="8" fill="#7c5a1c" opacity=".28" stroke="none"/>
+<path d="M-17,-22 C-40,-20 -58,-30 -66,-52 C-54,-42 -38,-40 -16,-40 Z" fill="url(#bone)"/>
+<path d="M17,-22 C40,-20 58,-30 66,-52 C54,-42 38,-40 16,-40 Z" fill="url(#bone)"/>
+<path d="M-60,-46 C-50,-41 -40,-39 -26,-38 M60,-46 C50,-41 40,-39 26,-38" fill="none" stroke="#b7a57c" stroke-width="1.6"/>
+<path d="M-24,-34 C-12,-44 12,-44 24,-34 C30,-16 24,2 19,14 C17,28 14,38 8,43 L-8,43 C-14,38 -17,28 -19,14 C-24,2 -30,-16 -24,-34 Z" fill="url(#bone)"/>
+<path d="M-22,-35 C-10,-42 10,-42 22,-35" fill="none" stroke="#fff" stroke-width="2.6" opacity=".85"/>
+<path d="M0,-40 L2,-24 L-1,-10 L1,2" fill="none" stroke="#a89468" stroke-width="1.5"/>
+<ellipse cx="-12" cy="-12" rx="7.5" ry="9" fill="#2e2415" transform="rotate(12 -12 -12)"/>
+<ellipse cx="12" cy="-12" rx="7.5" ry="9" fill="#2e2415" transform="rotate(-12 12 -12)"/>
+<circle cx="-14.5" cy="-15" r="2" fill="#fff" opacity=".35" stroke="none"/><circle cx="9.5" cy="-15" r="2" fill="#fff" opacity=".35" stroke="none"/>
+<ellipse cx="-5" cy="28" rx="2.8" ry="5" fill="#2e2415"/><ellipse cx="5" cy="28" rx="2.8" ry="5" fill="#2e2415"/>
+<rect x="-10" y="41" width="20" height="9" rx="2.5" fill="url(#bone)"/>
+<path d="M-6,42 V49 M0,42 V50 M6,42 V49" stroke="#b7a57c" stroke-width="1.3" fill="none"/>
+<path d="M-140,58 C-80,40 -34,50 0,54 C34,50 80,40 140,58 L140,130 L-140,130 Z" fill="#dec17e" stroke="none"/>
+<path d="M-140,58 C-80,40 -34,50 0,54 C34,50 80,40 140,58" fill="none" stroke="#c19a4c" stroke-width="2" opacity=".7"/>
+</g>'''
+
+
 def gen_desert():
     inner = ""
     for y, amp, col, op in [(60, 10, "#c79d4f", .35), (95, 14, "#b98b3e", .3), (130, 12, "#c79d4f", .4), (165, 16, "#b98b3e", .35)]:
@@ -200,7 +221,8 @@ def gen_desert():
     for _ in range(70):
         x, y = rnd.uniform(8, W-8), rnd.uniform(8, H-8)
         inner += f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{rnd.uniform(.6,1.5):.1f}" fill="#9c7630" opacity=".4"/>'
-    inner += cactus(60, 85, .9) + cactus(122, 128, .75)
+    inner += cactus(30, 142, .52) + cactus(146, 62, .5)
+    inner += skull(CX, 98, .82)
     return hex_tile(inner, gid="desert", c1=C["desert1"], c2=C["desert2"])
 
 # ---------- Meer ----------
@@ -288,9 +310,13 @@ for n in list(range(2, 7)) + list(range(8, 13)):
 def ship(kind):
     ratio = "3:1" if kind == "any" else "2:1"
     if kind == "any":
-        sail_icon = '<text x="64" y="47" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="40" fill="#2f6fb5">?</text>'
+        sail_icon = ''
     else:
         sail_icon = f'<g transform="translate(46 17) scale(.37)">{icon_body(kind)}</g>'
+    if kind == "any":
+        ratio_text = f'<text x="64" y="58" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="36" fill="#2a2118">{ratio}</text>'
+    else:
+        ratio_text = f'<text x="66" y="72" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="18" fill="#2a2118">{ratio}</text>'
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 120" width="130" height="120">
 <ellipse cx="66" cy="104" rx="52" ry="9" fill="#0b3d66" opacity=".28"/>
 <path d="M8,84 Q66,112 122,80 L110,98 Q66,118 22,100 Z" fill="#8f5d2c" stroke="{C['outline']}" stroke-width="3" stroke-linejoin="round"/>
@@ -300,7 +326,7 @@ def ship(kind):
 <path d="M68,12 C112,24 114,68 70,82 L28,82 C14,52 28,22 68,12 Z" fill="#fff3d6" stroke="{C['outline']}" stroke-width="3" stroke-linejoin="round"/>
 <path d="M68,12 C104,22 108,50 98,66" fill="none" stroke="#fff" stroke-width="3" opacity=".7" stroke-linecap="round"/>
 {sail_icon}
-<text x="66" y="72" text-anchor="middle" font-family="Georgia,serif" font-weight="800" font-size="18" fill="#2a2118">{ratio}</text>
+{ratio_text}
 <path d="M64,6 L84,12 L64,18 Z" fill="{C['red']}" stroke="{C['outline']}" stroke-width="1.5" stroke-linejoin="round"/>
 </svg>
 '''

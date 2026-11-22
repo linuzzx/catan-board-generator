@@ -1,75 +1,129 @@
-/* Catan Brettgenerator – Logik + Rendering (ohne Abhängigkeiten) */
+/* Catan Brettgenerator – Regel-Logik (ohne Abhängigkeiten, auch in Node testbar) */
 (function (root) {
   "use strict";
 
-  // ---------- Geometrie (Sechsecke mit Spitze oben, wie die SVG-Felder) ----------
   var HEX_W = Math.sqrt(3) * 100, HEX_H = 200, ROW_H = 150;
-  var DIRS = [[1, 0], [0, 1], [-1, 1], [-1, 0], [0, -1], [1, -1]]; // O, SO, SW, W, NW, NO
-
-  function pos(q, r) { return { x: HEX_W * (q + r / 2), y: ROW_H * r }; }
-  function key(q, r) { return q + "," + r; }
-
-  // Landfelder: Reihen 3-4-5-4-3
-  var LAND = [];
-  for (var r = -2; r <= 2; r++) {
-    for (var q = Math.max(-2, -r - 2); q <= Math.min(2, -r + 2); q++) LAND.push({ q: q, r: r });
-  }
-  var LAND_SET = {};
-  LAND.forEach(function (c, i) { LAND_SET[key(c.q, c.r)] = i; });
-
-  var NEIGHBORS = LAND.map(function (c) {
-    var out = [];
-    DIRS.forEach(function (d) {
-      var i = LAND_SET[key(c.q + d[0], c.r + d[1])];
-      if (i !== undefined) out.push(i);
-    });
-    return out;
-  });
-  var CENTER = LAND_SET[key(0, 0)];
-
-  // Küstenkanten (30) im Uhrzeigersinn, beginnend oben links
-  var COAST = [];
-  LAND.forEach(function (c, i) {
-    DIRS.forEach(function (d, di) {
-      var nq = c.q + d[0], nr = c.r + d[1];
-      if (LAND_SET[key(nq, nr)] === undefined) {
-        var a = pos(c.q, c.r), b = pos(nq, nr);
-        var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-        COAST.push({ land: i, dir: di, sea: { q: nq, r: nr }, mx: mx, my: my, ang: Math.atan2(my, mx) });
-      }
-    });
-  });
-  var START = -125 * Math.PI / 180; // knapp vor der Kante oben links (NW des obersten linken Feldes)
-  COAST.sort(function (a, b) {
-    var fa = (a.ang - START + 4 * Math.PI) % (2 * Math.PI);
-    var fb = (b.ang - START + 4 * Math.PI) % (2 * Math.PI);
-    return fa - fb;
-  });
-
-  // 9 Hafenplätze: Abstände 3-4-3-3-4-3-3-4-3 Kanten (dreifach symmetrisch, wie auf dem Original-Rahmen)
-  var PORT_EDGE_IDX = [0, 3, 7, 10, 13, 17, 20, 23, 27];
-  // Standard-Rahmen (vom Original-Spielplan abgelesen, im Uhrzeigersinn ab oben links)
-  var PORT_STANDARD = ["any", "grain", "ore", "any", "wool", "any", "any", "brick", "wood"];
-  var PORT_EDGES = PORT_EDGE_IDX.map(function (i) { return COAST[i]; });
-
-  // ---------- Spielmaterial (Standardspiel 3–4 Spieler) ----------
-  var TYPES = {
-    forest:    { name: "Wald",       res: "Holz",     icon: "wood" },
-    pasture:   { name: "Weideland",  res: "Wolle",    icon: "wool" },
-    fields:    { name: "Ackerland",  res: "Getreide", icon: "grain" },
-    hills:     { name: "Hügelland",  res: "Lehm",     icon: "brick" },
-    mountains: { name: "Gebirge",    res: "Erz",      icon: "ore" },
-    desert:    { name: "Wüste",      res: null,       icon: null }
-  };
-  var TILE_DECK = [].concat(
-    rep("forest", 4), rep("pasture", 4), rep("fields", 4),
-    rep("hills", 3), rep("mountains", 3), ["desert"]
-  );
-    var PORT_DECK = rep("any", 4).concat(["wood", "brick", "wool", "grain", "ore"]);
-  var PORT_RES = { wood: "Holz", brick: "Lehm", wool: "Wolle", grain: "Getreide", ore: "Erz" };
+  // Nachbarn in Einheiten (halbe Feldbreite, Reihe): O, SO, SW, W, NW, NO
+  var DIRS = [[2, 0], [1, 1], [-1, 1], [-2, 0], [-1, -1], [1, -1]];
 
   function rep(v, n) { var a = []; for (var i = 0; i < n; i++) a.push(v); return a; }
   function pips(n) { return 6 - Math.abs(7 - n); }
+
+  // ---------- Spielmaterial ----------
+  var TYPES = {
+    forest:    { name: "Wald",      res: "Holz" },
+    pasture:   { name: "Weideland", res: "Wolle" },
+    fields:    { name: "Ackerland", res: "Getreide" },
+    hills:     { name: "Hügelland", res: "Lehm" },
+    mountains: { name: "Gebirge",   res: "Erz" },
+    desert:    { name: "Wüste",     res: null }
+  };
+  var PORT_RES = { wood: "Holz", brick: "Lehm", wool: "Wolle", grain: "Getreide", ore: "Erz" };
+  var CORNER_NAMES = ["oben links", "links", "unten links", "unten rechts", "rechts", "oben rechts"];
+
+  var MODES = {
+    // Standardspiel für 3–4 Spieler
+    "34": {
+      label: "3–4 Spieler",
+      rows: [3, 4, 5, 4, 3],
+      deck: [].concat(rep("forest", 4), rep("pasture", 4), rep("fields", 4), rep("hills", 3), rep("mountains", 3), ["desert"]),
+      // Chips A..R in der festen Reihenfolge der Spielregel
+      chips: [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11],
+      portDeck: rep("any", 4).concat(["wood", "brick", "wool", "grain", "ore"]),
+      // Standard-Rahmen im Uhrzeigersinn ab oben links
+      portStandard: ["any", "grain", "ore", "any", "wool", "any", "any", "brick", "wood"],
+      portEdgeIdx: [0, 3, 7, 10, 13, 17, 20, 23, 27]
+    },
+    // Erweiterung für 5–6 Spieler
+    "56": {
+      label: "5–6 Spieler",
+      rows: [3, 4, 5, 6, 5, 4, 3],
+      deck: [].concat(rep("forest", 6), rep("pasture", 6), rep("fields", 6), rep("hills", 5), rep("mountains", 5), rep("desert", 2)),
+      // Chips A..Y, Za, Zb, Zc
+      chips: [2, 5, 4, 6, 3, 9, 8, 11, 11, 10, 6, 3, 8, 4, 8, 10, 11, 12, 10, 5, 4, 9, 5, 9, 12, 3, 2, 6],
+      portDeck: rep("any", 5).concat(["wood", "brick", "wool", "wool", "grain", "ore"]),
+      // Grundrahmen + 2 Zusatzstücke (Wolle-2:1 am Stoß 3-3, 3:1 am Stoß 5-5) + 2 reine Meeresstücke
+      portStandard: ["any", "grain", "wool", "ore", "any", "wool", "any", "any", "any", "brick", "wood"],
+      portEdgeIdx: [0, 3, 7, 10, 13, 17, 20, 24, 27, 31, 34]
+    }
+  };
+
+  // ---------- Layout ----------
+  var layoutCache = {};
+  function buildLayout(mode) {
+    if (layoutCache[mode]) return layoutCache[mode];
+    var rows = MODES[mode].rows, mid = (rows.length - 1) / 2;
+    var land = [], map = {};
+    rows.forEach(function (n, ri) {
+      for (var i = 0; i < n; i++) {
+        var ix = 2 * i - (n - 1);
+        map[ix + "," + ri] = land.length;
+        land.push({ ix: ix, ri: ri, x: HEX_W * ix / 2, y: ROW_H * (ri - mid) });
+      }
+    });
+    var neighbors = land.map(function (c) {
+      var out = [];
+      DIRS.forEach(function (d) {
+        var j = map[(c.ix + d[0]) + "," + (c.ri + d[1])];
+        if (j !== undefined) out.push(j);
+      });
+      return out;
+    });
+
+    // Küstenkanten im Uhrzeigersinn, Start: Nordwest-Kante des Eckfelds oben links
+    var coast = [];
+    land.forEach(function (c, i) {
+      DIRS.forEach(function (d, di) {
+        if (map[(c.ix + d[0]) + "," + (c.ri + d[1])] === undefined) {
+          var sx = c.x + d[0] * HEX_W / 4, sy = c.y + d[1] * ROW_H / 2; // Kantenmitte
+          coast.push({ land: i, dir: di, sea: { x: c.x + d[0] * HEX_W / 2, y: c.y + d[1] * ROW_H }, mx: sx, my: sy, ang: Math.atan2(sy, sx) });
+        }
+      });
+    });
+    coast.sort(function (a, b) { return a.ang - b.ang; });
+    var first = coast.findIndex(function (e) { return e.land === 0 && e.dir === 4; });
+    coast = coast.slice(first).concat(coast.slice(0, first));
+
+    // Ringe von außen nach innen
+    var remaining = {}; land.forEach(function (_, i) { remaining[i] = true; });
+    var rings = [];
+    while (Object.keys(remaining).length) {
+      var ring = Object.keys(remaining).map(Number).filter(function (i) {
+        return neighbors[i].filter(function (j) { return remaining[j]; }).length < 6;
+      });
+      if (!ring.length) ring = Object.keys(remaining).map(Number);
+      rings.push(ring);
+      ring.forEach(function (i) { delete remaining[i]; });
+    }
+    var corners = rings[0].filter(function (i) { return neighbors[i].length === 3; });
+    var ang = function (i) { return Math.atan2(-land[i].y, land[i].x) * 180 / Math.PI; };
+    corners.sort(function (a, b) {
+      var ra = ((ang(a) - 120) % 360 + 720) % 360, rb = ((ang(b) - 120) % 360 + 720) % 360;
+      return ra - rb;
+    });
+
+    var L = { mode: mode, land: land, neighbors: neighbors, coast: coast, rings: rings, corners: corners, ang: ang };
+    L.portEdges = MODES[mode].portEdgeIdx.map(function (i) { return coast[i]; });
+    layoutCache[mode] = L;
+    return L;
+  }
+
+  // Frame: sechs Stützgeraden (Normalen bei -90°, -30°, 30°, 90°, 150°, 210°) um die Insel
+  function frameOutline(mode, margin) {
+    var L = buildLayout(mode), pts = [];
+    var normals = [-90, -30, 30, 90, 150, 210].map(function (a) { return [Math.cos(a * Math.PI / 180), Math.sin(a * Math.PI / 180)]; });
+    var ap = normals.map(function (n) {
+      var m = -Infinity;
+      L.land.forEach(function (c) { m = Math.max(m, n[0] * c.x + n[1] * c.y); });
+      return m + 100 + margin;
+    });
+    for (var k = 0; k < 6; k++) {
+      var n1 = normals[k], n2 = normals[(k + 1) % 6], a1 = ap[k], a2 = ap[(k + 1) % 6];
+      var det = n1[0] * n2[1] - n1[1] * n2[0];
+      pts.push([(a1 * n2[1] - a2 * n1[1]) / det, (n1[0] * a2 - n2[0] * a1) / det]);
+    }
+    return pts;
+  }
 
   // ---------- Zufall (mit Seed, damit Bretter teilbar sind) ----------
   function hashSeed(str) {
@@ -100,85 +154,73 @@
     return a;
   }
   function newSeed() {
-    var s = "";
-    var cs = "abcdefghjkmnpqrstuvwxyz23456789";
+    var s = "", cs = "abcdefghjkmnpqrstuvwxyz23456789";
     for (var i = 0; i < 5; i++) s += cs[Math.floor(Math.random() * cs.length)];
     return s;
   }
 
   // ---------- Brett erzeugen ----------
-  function makeTiles(seed, opts) {
-    var rand = rng("t:" + seed);
-    if (opts.desertCenter) {
-      var rest = shuffle(TILE_DECK.filter(function (t) { return t !== "desert"; }), rand);
-      var out = [], k = 0;
-      for (var i = 0; i < LAND.length; i++) out.push(i === CENTER ? "desert" : rest[k++]);
-      return out;
-    }
-    return shuffle(TILE_DECK, rand);
+  function makeTiles(mode, seed, opts) {
+    var M = MODES[mode], L = buildLayout(mode), rand = rng("t:" + mode + seed);
+    if (!opts.desertCenter) return shuffle(M.deck, rand);
+    // Wüsten in die Mitte: innerster Ring
+    var inner = L.rings[L.rings.length - 1];
+    var deserts = M.deck.filter(function (t) { return t === "desert"; }).length;
+    var chosen = shuffle(inner, rand).slice(0, deserts);
+    var rest = shuffle(M.deck.filter(function (t) { return t !== "desert"; }), rand), k = 0;
+    return L.land.map(function (_, i) { return chosen.indexOf(i) >= 0 ? "desert" : rest[k++]; });
   }
 
-  // ---------- Offizielle Zahlenverteilung: Spirale mit den Chips A bis R ----------
-  // Start auf einer der 6 Eckfelder, gegen den Uhrzeigersinn nach innen, die Wüste wird übersprungen.
-  var CHIP_ORDER = [5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11]; // A..R
-  var CORNER_NAMES = ["oben links", "links", "unten links", "unten rechts", "rechts", "oben rechts"];
-
-  function hexDist(c) { return Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r)); }
-  function angleCCW(i) { var p = pos(LAND[i].q, LAND[i].r); return Math.atan2(-p.y, p.x) * 180 / Math.PI; }
-  function ringSorted(dist, startAngle) {
-    var ids = [];
-    LAND.forEach(function (c, i) { if (hexDist(c) === dist) ids.push(i); });
-    var rel = function (i) { return ((angleCCW(i) - startAngle) % 360 + 720) % 360; };
-    return ids.sort(function (a, b) { return rel(a) - rel(b); });
-  }
-  // Eckfelder im Gegenuhrzeigersinn, beginnend oben links
-  var CORNERS = (function () {
-    var ids = [];
-    LAND.forEach(function (c, i) { if (hexDist(c) === 2 && NEIGHBORS[i].length === 3) ids.push(i); });
-    var rel = function (i) { return ((angleCCW(i) - 120) % 360 + 720) % 360; };
-    return ids.sort(function (a, b) { return rel(a) - rel(b); });
-  })();
-
-  // Reihenfolge aller 19 Felder entlang der Spirale für Startecke 0..5
-  function spiralOrder(corner) {
-    var start = CORNERS[corner];
-    var outer = ringSorted(2, angleCCW(start));
-    var innerStart = NEIGHBORS[start].filter(function (j) { return hexDist(LAND[j]) === 1; })[0];
-    var inner = ringSorted(1, angleCCW(innerStart));
-    return outer.concat(inner, [CENTER]);
+  // Offizielle Zahlenverteilung: Spirale mit den Chips A, B, C ...
+  // Start auf einem Eckfeld, gegen den Uhrzeigersinn nach innen, Wüsten werden übersprungen.
+  function spiralOrder(mode, corner) {
+    var L = buildLayout(mode), start = L.corners[corner], order = [];
+    var rel = function (i, from) { return ((L.ang(i) - L.ang(from)) % 360 + 720) % 360; };
+    var from = start;
+    L.rings.forEach(function (ring, k) {
+      if (k > 0) {
+        var cands = L.neighbors[from].filter(function (j) { return ring.indexOf(j) >= 0; });
+        cands.sort(function (a, b) { return rel(a, from) - rel(b, from); });
+        from = cands.length ? cands[0] : ring[0];
+      }
+      var sorted = ring.slice().sort(function (a, b) { return rel(a, from) - rel(b, from); });
+      order = order.concat(sorted);
+    });
+    return order;
   }
 
-  function makeNumbers(corner, tiles) {
-    var res = new Array(tiles.length).fill(null), k = 0;
-    spiralOrder(corner).forEach(function (i) {
-      if (tiles[i] !== "desert") res[i] = CHIP_ORDER[k++];
+  function makeNumbers(mode, corner, tiles) {
+    var chips = MODES[mode].chips, res = new Array(tiles.length).fill(null), k = 0;
+    spiralOrder(mode, corner).forEach(function (i) {
+      if (tiles[i] !== "desert") res[i] = chips[k++];
     });
     return res;
   }
 
-  function makePorts(seed, opts) {
-    return opts.randomPorts ? shuffle(PORT_DECK, rng("h:" + seed)) : PORT_STANDARD.slice();
+  function makePorts(mode, seed, opts) {
+    var M = MODES[mode];
+    return opts.randomPorts ? shuffle(M.portDeck, rng("h:" + mode + seed)) : M.portStandard.slice();
   }
 
-  function makeBoard(seeds, opts) {
-    var tiles = makeTiles(seeds.t, opts);
+  function makeBoard(mode, seeds, opts) {
+    var tiles = makeTiles(mode, seeds.t, opts);
     var corner = ((parseInt(seeds.n, 10) % 6) + 6) % 6 || 0;
-    return { tiles: tiles, corner: corner, numbers: makeNumbers(corner, tiles), ports: makePorts(seeds.h, opts) };
+    return { mode: mode, tiles: tiles, corner: corner, numbers: makeNumbers(mode, corner, tiles), ports: makePorts(mode, seeds.h, opts) };
   }
 
-  // ---------- Regelprüfung (wird auch in der Oberfläche angezeigt) ----------
+  // ---------- Regelprüfung ----------
   function check(board) {
-    var counts = {};
+    var M = MODES[board.mode], L = buildLayout(board.mode);
+    var counts = {}, deckCounts = {};
     board.tiles.forEach(function (t) { counts[t] = (counts[t] || 0) + 1; });
-    var tilesOk = counts.forest === 4 && counts.pasture === 4 && counts.fields === 4 &&
-      counts.hills === 3 && counts.mountains === 3 && counts.desert === 1 && board.tiles.length === 19;
-    var chipsSorted = board.numbers.filter(function (n) { return n !== null; }).sort(function (a, b) { return a - b; });
-    var chipsOk = chipsSorted.join() === CHIP_ORDER.slice().sort(function (a, b) { return a - b; }).join() &&
+    M.deck.forEach(function (t) { deckCounts[t] = (deckCounts[t] || 0) + 1; });
+    var tilesOk = board.tiles.length === M.deck.length && Object.keys(deckCounts).every(function (k) { return counts[k] === deckCounts[k]; });
+    var sortNum = function (a, b) { return a - b; };
+    var chipsOk = board.numbers.filter(function (n) { return n !== null; }).sort(sortNum).join() === M.chips.slice().sort(sortNum).join() &&
       board.numbers.every(function (n, i) { return (n === null) === (board.tiles[i] === "desert"); });
-    var expected = makeNumbers(board.corner, board.tiles);
-    var spiralOk = expected.join() === board.numbers.join();
+    var spiralOk = makeNumbers(board.mode, board.corner, board.tiles).join() === board.numbers.join();
     var red = 0;
-    NEIGHBORS.forEach(function (nb, i) {
+    L.neighbors.forEach(function (nb, i) {
       nb.forEach(function (j) {
         if (j < i) return;
         var a = board.numbers[i], b = board.numbers[j];
@@ -186,17 +228,17 @@
         if ((a === 6 || a === 8) && (b === 6 || b === 8)) red++;
       });
     });
-    var pc = {};
+    var pc = {}, dc = {};
     board.ports.forEach(function (p) { pc[p] = (pc[p] || 0) + 1; });
-    var portsOk = board.ports.length === 9 && pc.any === 4 && pc.wood === 1 && pc.brick === 1 &&
-      pc.wool === 1 && pc.grain === 1 && pc.ore === 1;
+    M.portDeck.forEach(function (p) { dc[p] = (dc[p] || 0) + 1; });
+    var portsOk = board.ports.length === M.portDeck.length && Object.keys(dc).every(function (k) { return pc[k] === dc[k]; });
     return { tilesOk: tilesOk, chipsOk: chipsOk, spiralOk: spiralOk, redPairs: red, portsOk: portsOk };
   }
 
   var API = {
-    LAND: LAND, COAST: COAST, PORT_EDGES: PORT_EDGES, PORT_STANDARD: PORT_STANDARD, NEIGHBORS: NEIGHBORS, CENTER: CENTER,
-    TYPES: TYPES, PORT_RES: PORT_RES, CHIP_ORDER: CHIP_ORDER, CORNER_NAMES: CORNER_NAMES,
-    HEX_W: HEX_W, HEX_H: HEX_H, pos: pos, pips: pips, newSeed: newSeed, spiralOrder: spiralOrder,
+    MODES: MODES, TYPES: TYPES, PORT_RES: PORT_RES, CORNER_NAMES: CORNER_NAMES,
+    HEX_W: HEX_W, HEX_H: HEX_H, pips: pips, newSeed: newSeed,
+    layout: buildLayout, frameOutline: frameOutline, spiralOrder: spiralOrder,
     makeBoard: makeBoard, check: check
   };
   if (typeof module !== "undefined" && module.exports) module.exports = API;

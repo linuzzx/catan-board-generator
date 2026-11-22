@@ -179,3 +179,12 @@ footer{text-align:center; padding:6px 16px 34px; color:var(--brown-2); font-size
 #chip-order span{display:inline-flex; flex-direction:column; align-items:center; min-width:34px; padding:2px 4px; background:var(--cream); border:2px solid var(--brown); border-radius:12px; font-family:var(--serif); font-weight:800; line-height:1.1}
 #chip-order span i{font-style:normal; font-family:var(--font); font-size:.62rem; color:var(--brown-2); font-weight:700}
 #chip-order span.red{color:var(--red); border-color:var(--red)}
+
+/* Spielerzahl-Umschalter */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#f3e2b3;border:3px solid #3b2a14;border-radius:16px;padding:5px;margin:0 0 12px}
+.seg label{cursor:pointer}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;text-align:center;font-weight:800;padding:8px 6px;border-radius:11px;color:#6b4a1c;transition:transform .15s,background .15s}
+.seg input:checked+span{background:#c4161c;color:#fff8e1;box-shadow:0 3px 0 #7d0d11;transform:translateY(-1px)}
+.seg input:focus-visible+span{outline:3px solid #f2b21c;outline-offset:2px}
+.seg label:hover span{transform:translateY(-1px)}

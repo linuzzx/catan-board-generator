@@ -43,6 +43,11 @@
         <span>Neues Brett würfeln!</span>
       </button>
 
+      <div class="seg" role="radiogroup" aria-label="Spielerzahl">
+        <label><input type="radio" name="players" value="34" checked><span>3–4 Spieler</span></label>
+        <label><input type="radio" name="players" value="56"><span>5–6 Spieler</span></label>
+      </div>
+
       <div class="mini-row">
         <button id="btn-tiles" class="mini">Felder neu</button>
         <button id="btn-nums" class="mini" title="Die Spirale startet in einer anderen Ecke">Zahlen neu</button>
@@ -52,7 +57,7 @@
       <label class="opt"><input type="checkbox" id="opt-desert"><span class="tick"></span>
         <span class="otext"><b>Wüste in die Mitte</b><small>Sonst landet sie irgendwo auf der Insel.</small></span></label>
       <label class="opt"><input type="checkbox" id="opt-ports"><span class="tick"></span>
-        <span class="otext"><b>Häfen zufällig verteilen</b><small>Optional: Die 9 Hafenplättchen werden auf den festen Hafenplätzen gemischt.</small></span></label>
+        <span class="otext"><b>Häfen zufällig verteilen</b><small>Optional: Die Hafenplättchen werden auf den festen Hafenplätzen gemischt.</small></span></label>
 
       <div class="share">
         <button id="btn-copy" class="soft">🔗 Link kopieren</button>
@@ -70,11 +75,11 @@
     <details class="card rules">
       <summary>So wird gemischt</summary>
       <ol>
-        <li>Die 19 Landfelder werden gemischt und im Muster 3-4-5-4-3 ausgelegt.</li>
-        <li>Die Zahlenchips folgen immer der festen Reihenfolge A–R: Start auf einem der 6 Eckfelder, dann gegen den Uhrzeigersinn in einer Spirale nach innen. Die Wüste wird übersprungen.</li>
-        <li>Das ergibt 6 Startecken × 19 mögliche Wüstenplätze = 114 Zahlenbilder. Die roten 6 und 8 liegen dabei nie nebeneinander.</li>
-        <li>Die 9 Häfen (4× 3:1, je 1× 2:1 für Holz, Lehm, Wolle, Getreide, Erz) sitzen standardmäßig an den festen Plätzen des Rahmens. Wer mag, mischt sie zufällig.</li>
-        <li>Gespielt wird mit 3–4 Spielern und dem Standardbrett.</li>
+        <li id="rule-count"></li>
+        <li>Die Zahlenchips folgen immer der festen Reihenfolge der Spielregel: Start auf einem der 6 Eckfelder, dann gegen den Uhrzeigersinn in einer Spirale nach innen. Wüsten werden übersprungen.</li>
+        <li id="rule-perm">Das ergibt 6 Startecken × 19 mögliche Wüstenplätze = 114 Zahlenbilder. Die roten 6 und 8 liegen dabei nie nebeneinander.</li>
+        <li id="rule-ports"></li>
+        <li id="rule-players"></li>
       </ol>
       <div class="order"><b>Zahlenfolge</b><div id="chip-order"></div></div>
     </details>
