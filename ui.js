@@ -23,7 +23,8 @@
     state.mode = p.get("p") === "56" ? "56" : "34";
     state.opts.desertCenter = p.get("d") === "1";
     state.opts.randomPorts = p.get("r") === "1";
-    state.helper = p.get("helper") === "1";
+    state.helperRaw = p.get("helper");
+    state.helper = state.helperRaw === "1";
   }
   function writeHash() {
     var p = new URLSearchParams();
@@ -32,7 +33,7 @@
     if (state.opts.randomPorts) p.set("h", state.seeds.h);
     if (state.opts.desertCenter) p.set("d", "1");
     if (state.opts.randomPorts) p.set("r", "1");
-    if (state.helper) p.set("helper", "1");
+    if (state.helperRaw === "1" || state.helperRaw === "0") p.set("helper", state.helperRaw);
     history.replaceState(null, "", "#" + p.toString());
   }
 
