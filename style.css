@@ -126,7 +126,8 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace; background:var(--cream-2
 .rules li{margin:6px 0}
 
 /* ---------- Brett-Animationen ---------- */
-.board .tile,.board .chip,.board .port{transform-box:fill-box; transform-origin:center}
+.board .tile,.board .chip,.board .port,.board .robber{transform-box:fill-box; transform-origin:center}
+.board .robber.pop{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both; animation-delay:var(--d)}
 .board .tile.pop{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both; animation-delay:var(--d)}
 .board .port.pop{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both; animation-delay:var(--d)}
 .board .chip.drop{animation:drop .6s cubic-bezier(.3,1.5,.5,1) both; animation-delay:var(--d)}
@@ -140,11 +141,9 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace; background:var(--cream-2
 /* Meer, Strand, Stege */
 .board .waves path{fill:none; stroke:#fff; stroke-width:2.4; stroke-linecap:round; opacity:.28}
 .board .seam{fill:none; stroke:#0f5f9c; stroke-width:3; opacity:.55}
-.board .shallows polygon{fill:#8fe0ff; opacity:.55}
-.board .beach polygon{fill:#f1d9a0}
-.board .jet-o{stroke:#6e4421; stroke-width:15; stroke-linecap:butt}
-.board .jet{stroke:#c28a55; stroke-width:11; stroke-linecap:butt}
-.board .jet-p{stroke:#8a5628; stroke-width:1.6; opacity:.8}
+.board .jet-o{stroke:#7e5539; stroke-width:17.8; stroke-linecap:butt}
+.board .jet{stroke:#b28259; stroke-width:15.6; stroke-linecap:butt}
+.board .jet-p{stroke:#946443; stroke-width:2.2}
 
 /* ---------- Sonstiges ---------- */
 .toast{
