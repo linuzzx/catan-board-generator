@@ -1,30 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="173.2" height="200" viewBox="-78 -90.0666 156 180.133">
-<defs><radialGradient id="f" cx="0" cy="0" r="78.1" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdc43c"/><stop offset="1" stop-color="#e9b00c"/></radialGradient></defs>
-<polygon points="0.00,-86.60 75.00,-43.30 75.00,43.30 0.00,86.60 -75.00,43.30 -75.00,-43.30" fill="#b0821f"/>
-<polygon points="0.00,-85.22 36.90,-63.91 34.50,-59.76 0.00,-79.67" fill="#fcdf7b" stroke="#fcdf7b" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="36.90,-63.91 73.80,-42.61 69.00,-39.84 34.50,-59.76" fill="#fdd563" stroke="#fdd563" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="73.80,-42.61 73.80,0.00 69.00,0.00 69.00,-39.84" fill="#fdc641" stroke="#fdc641" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="73.80,0.00 73.80,42.61 69.00,39.84 69.00,0.00" fill="#d6a228" stroke="#d6a228" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="73.80,42.61 36.90,63.91 34.50,59.76 69.00,39.84" fill="#b58215" stroke="#b58215" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="36.90,63.91 0.00,85.22 0.00,79.67 34.50,59.76" fill="#cf9b25" stroke="#cf9b25" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="0.00,85.22 -36.90,63.91 -34.50,59.76 0.00,79.67" fill="#cf9b25" stroke="#cf9b25" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-36.90,63.91 -73.80,42.61 -69.00,39.84 -34.50,59.76" fill="#b58215" stroke="#b58215" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-73.80,42.61 -73.80,0.00 -69.00,0.00 -69.00,39.84" fill="#d6a228" stroke="#d6a228" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-73.80,0.00 -73.80,-42.61 -69.00,-39.84 -69.00,0.00" fill="#fdc641" stroke="#fdc641" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-73.80,-42.61 -36.90,-63.91 -34.50,-59.76 -69.00,-39.84" fill="#fdd563" stroke="#fdd563" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-36.90,-63.91 0.00,-85.22 0.00,-79.67 -34.50,-59.76" fill="#fcdf7b" stroke="#fcdf7b" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="0.00,-79.67 34.50,-59.76 33.80,-58.54 0.00,-78.06" fill="#9b6902" stroke="#9b6902" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="34.50,-59.76 69.00,-39.84 67.60,-39.03 33.80,-58.54" fill="#9b6902" stroke="#9b6902" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="69.00,-39.84 69.00,0.00 67.60,0.00 67.60,-39.03" fill="#dba52b" stroke="#dba52b" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="69.00,0.00 69.00,39.84 67.60,39.03 67.60,0.00" fill="#f5bf3f" stroke="#f5bf3f" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="69.00,39.84 34.50,59.76 33.80,58.54 67.60,39.03" fill="#fcd660" stroke="#fcd660" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="34.50,59.76 0.00,79.67 0.00,78.06 33.80,58.54" fill="#fcd660" stroke="#fcd660" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="0.00,79.67 -34.50,59.76 -33.80,58.54 0.00,78.06" fill="#fcd660" stroke="#fcd660" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-34.50,59.76 -69.00,39.84 -67.60,39.03 -33.80,58.54" fill="#fcd660" stroke="#fcd660" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-69.00,39.84 -69.00,0.00 -67.60,0.00 -67.60,39.03" fill="#f5bf3f" stroke="#f5bf3f" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-69.00,0.00 -69.00,-39.84 -67.60,-39.03 -67.60,0.00" fill="#dba52b" stroke="#dba52b" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-69.00,-39.84 -34.50,-59.76 -33.80,-58.54 -67.60,-39.03" fill="#9b6902" stroke="#9b6902" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-34.50,-59.76 0.00,-79.67 0.00,-78.06 -33.80,-58.54" fill="#9b6902" stroke="#9b6902" stroke-width="0.35" stroke-linejoin="round"/>
+<defs><radialGradient id="f" cx="0" cy="0" r="78.1" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdc43c"/><stop offset="1" stop-color="#e9b00c"/></radialGradient><linearGradient id="fr" x1="0" y1="-86.6" x2="0" y2="86.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fcdf7b"/><stop offset="0.26" stop-color="#fdd563"/><stop offset="0.4" stop-color="#fdc641"/><stop offset="0.6" stop-color="#d6a228"/><stop offset="0.76" stop-color="#b58215"/><stop offset="1" stop-color="#cf9b25"/></linearGradient><linearGradient id="fl" x1="0" y1="-86.6" x2="0" y2="86.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#9b6902"/><stop offset="0.3" stop-color="#9b6902"/><stop offset="0.42" stop-color="#dba52b"/><stop offset="0.58" stop-color="#f5bf3f"/><stop offset="0.7" stop-color="#fcd660"/><stop offset="1" stop-color="#fcd660"/></linearGradient></defs>
+<path d="M0.00 -86.60 L75.00 -43.30 L75.00 43.30 L0.00 86.60 L-75.00 43.30 L-75.00 -43.30 Z M-69.00 -39.84 L-69.00 39.84 L0.00 79.67 L69.00 39.84 L69.00 -39.84 L0.00 -79.67 Z" fill="url(#fr)" fill-rule="evenodd"/>
+<path d="M0.00 -79.67 L69.00 -39.84 L69.00 39.84 L0.00 79.67 L-69.00 39.84 L-69.00 -39.84 Z M-67.60 -39.03 L-67.60 39.03 L0.00 78.06 L67.60 39.03 L67.60 -39.03 L0.00 -78.06 Z" fill="url(#fl)" fill-rule="evenodd"/>
 <polygon points="0.00,-78.06 67.60,-39.03 67.60,39.03 0.00,78.06 -67.60,39.03 -67.60,-39.03" fill="url(#f)"/>
 <path d="M-2.6 -15 C-2 -22 -1 -27 1.6 -31.5" fill="none" stroke="#a46f12" stroke-width="2.2" stroke-linecap="round"/>
 <g fill="#e8c04c" stroke="#a46f12" stroke-width="1.25"><ellipse cx="16.80" cy="-47.20" rx="2.1849999999999996" ry="3.7049999999999996" transform="rotate(43.4 16.80 -47.20)"/><ellipse cx="17.38" cy="-43.59" rx="2.3" ry="3.9" transform="rotate(71.4 17.38 -43.59)"/><ellipse cx="13.16" cy="-47.57" rx="2.3" ry="3.9" transform="rotate(15.4 13.16 -47.57)"/><ellipse cx="13.30" cy="-39.27" rx="2.3" ry="3.9" transform="rotate(71.4 13.30 -39.27)"/><ellipse cx="9.08" cy="-43.25" rx="2.3" ry="3.9" transform="rotate(15.4 9.08 -43.25)"/><ellipse cx="9.22" cy="-34.95" rx="2.3" ry="3.9" transform="rotate(71.4 9.22 -34.95)"/><ellipse cx="5.00" cy="-38.93" rx="2.3" ry="3.9" transform="rotate(15.4 5.00 -38.93)"/><ellipse cx="5.14" cy="-30.63" rx="2.3" ry="3.9" transform="rotate(71.4 5.14 -30.63)"/><ellipse cx="0.92" cy="-34.61" rx="2.3" ry="3.9" transform="rotate(15.4 0.92 -34.61)"/></g>

@@ -1,30 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="173.2" height="200" viewBox="-78 -90.0666 156 180.133">
-<defs><radialGradient id="f" cx="0" cy="0" r="78.1" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d9d094"/><stop offset="1" stop-color="#c4bb7a"/></radialGradient></defs>
-<polygon points="0.00,-86.60 75.00,-43.30 75.00,43.30 0.00,86.60 -75.00,43.30 -75.00,-43.30" fill="#a3925f"/>
-<polygon points="0.00,-85.22 36.90,-63.91 34.50,-59.76 0.00,-79.67" fill="#d9cb9c" stroke="#d9cb9c" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="36.90,-63.91 73.80,-42.61 69.00,-39.84 34.50,-59.76" fill="#d6c99a" stroke="#d6c99a" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="73.80,-42.61 73.80,0.00 69.00,0.00 69.00,-39.84" fill="#d0c394" stroke="#d0c394" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="73.80,0.00 73.80,42.61 69.00,39.84 69.00,0.00" fill="#b6ab7d" stroke="#b6ab7d" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="73.80,42.61 36.90,63.91 34.50,59.76 69.00,39.84" fill="#9c9165" stroke="#9c9165" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="36.90,63.91 0.00,85.22 0.00,79.67 34.50,59.76" fill="#aea375" stroke="#aea375" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="0.00,85.22 -36.90,63.91 -34.50,59.76 0.00,79.67" fill="#aea375" stroke="#aea375" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-36.90,63.91 -73.80,42.61 -69.00,39.84 -34.50,59.76" fill="#9c9165" stroke="#9c9165" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-73.80,42.61 -73.80,0.00 -69.00,0.00 -69.00,39.84" fill="#b6ab7d" stroke="#b6ab7d" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-73.80,0.00 -73.80,-42.61 -69.00,-39.84 -69.00,0.00" fill="#d0c394" stroke="#d0c394" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-73.80,-42.61 -36.90,-63.91 -34.50,-59.76 -69.00,-39.84" fill="#d6c99a" stroke="#d6c99a" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-36.90,-63.91 0.00,-85.22 0.00,-79.67 -34.50,-59.76" fill="#d9cb9c" stroke="#d9cb9c" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="0.00,-79.67 34.50,-59.76 33.80,-58.54 0.00,-78.06" fill="#8f8256" stroke="#8f8256" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="34.50,-59.76 69.00,-39.84 67.60,-39.03 33.80,-58.54" fill="#8f8256" stroke="#8f8256" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="69.00,-39.84 69.00,0.00 67.60,0.00 67.60,-39.03" fill="#b2a779" stroke="#b2a779" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="69.00,0.00 69.00,39.84 67.60,39.03 67.60,0.00" fill="#ccc190" stroke="#ccc190" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="69.00,39.84 34.50,59.76 33.80,58.54 67.60,39.03" fill="#d3c795" stroke="#d3c795" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="34.50,59.76 0.00,79.67 0.00,78.06 33.80,58.54" fill="#d3c795" stroke="#d3c795" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="0.00,79.67 -34.50,59.76 -33.80,58.54 0.00,78.06" fill="#d3c795" stroke="#d3c795" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-34.50,59.76 -69.00,39.84 -67.60,39.03 -33.80,58.54" fill="#d3c795" stroke="#d3c795" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-69.00,39.84 -69.00,0.00 -67.60,0.00 -67.60,39.03" fill="#ccc190" stroke="#ccc190" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-69.00,0.00 -69.00,-39.84 -67.60,-39.03 -67.60,0.00" fill="#b2a779" stroke="#b2a779" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-69.00,-39.84 -34.50,-59.76 -33.80,-58.54 -67.60,-39.03" fill="#8f8256" stroke="#8f8256" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-34.50,-59.76 0.00,-79.67 0.00,-78.06 -33.80,-58.54" fill="#8f8256" stroke="#8f8256" stroke-width="0.35" stroke-linejoin="round"/>
+<defs><radialGradient id="f" cx="0" cy="0" r="78.1" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d9d094"/><stop offset="1" stop-color="#c4bb7a"/></radialGradient><linearGradient id="fr" x1="0" y1="-86.6" x2="0" y2="86.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d9cb9c"/><stop offset="0.26" stop-color="#d6c99a"/><stop offset="0.4" stop-color="#d0c394"/><stop offset="0.6" stop-color="#b6ab7d"/><stop offset="0.76" stop-color="#9c9165"/><stop offset="1" stop-color="#aea375"/></linearGradient><linearGradient id="fl" x1="0" y1="-86.6" x2="0" y2="86.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8f8256"/><stop offset="0.3" stop-color="#8f8256"/><stop offset="0.42" stop-color="#b2a779"/><stop offset="0.58" stop-color="#ccc190"/><stop offset="0.7" stop-color="#d3c795"/><stop offset="1" stop-color="#d3c795"/></linearGradient></defs>
+<path d="M0.00 -86.60 L75.00 -43.30 L75.00 43.30 L0.00 86.60 L-75.00 43.30 L-75.00 -43.30 Z M-69.00 -39.84 L-69.00 39.84 L0.00 79.67 L69.00 39.84 L69.00 -39.84 L0.00 -79.67 Z" fill="url(#fr)" fill-rule="evenodd"/>
+<path d="M0.00 -79.67 L69.00 -39.84 L69.00 39.84 L0.00 79.67 L-69.00 39.84 L-69.00 -39.84 Z M-67.60 -39.03 L-67.60 39.03 L0.00 78.06 L67.60 39.03 L67.60 -39.03 L0.00 -78.06 Z" fill="url(#fl)" fill-rule="evenodd"/>
 <polygon points="0.00,-78.06 67.60,-39.03 67.60,39.03 0.00,78.06 -67.60,39.03 -67.60,-39.03" fill="url(#f)"/>
 <clipPath id="ca"><path d="M-9.4 -49 C-9.4 -53 -6.4 -56 -2.5 -56 C1.4 -56 4.4 -53 4.4 -49 L4.4 -41 L5.2 -41 L5.2 -45.4 C5.2 -47.6 7 -49.4 9.2 -49.4 C11.4 -49.4 13.2 -47.6 13.2 -45.4 L13.2 -39.4 C13.2 -37.4 11.8 -35.8 9.6 -35.8 L4.4 -35.8 L4.4 -16.6 C4.4 -15.2 3.2 -14 1.8 -14 L-6.8 -14 C-8.2 -14 -9.4 -15.2 -9.4 -16.6 L-9.4 -26.6 L-13.4 -26.6 C-15.4 -26.6 -16.9 -28.2 -16.9 -30.2 L-16.9 -33.6 C-16.9 -35.2 -15.6 -36.5 -14 -36.5 C-12.4 -36.5 -11.1 -35.2 -11.1 -33.6 L-11.1 -31.6 L-9.4 -31.6 Z"/></clipPath>
 <path d="M-9.4 -49 C-9.4 -53 -6.4 -56 -2.5 -56 C1.4 -56 4.4 -53 4.4 -49 L4.4 -41 L5.2 -41 L5.2 -45.4 C5.2 -47.6 7 -49.4 9.2 -49.4 C11.4 -49.4 13.2 -47.6 13.2 -45.4 L13.2 -39.4 C13.2 -37.4 11.8 -35.8 9.6 -35.8 L4.4 -35.8 L4.4 -16.6 C4.4 -15.2 3.2 -14 1.8 -14 L-6.8 -14 C-8.2 -14 -9.4 -15.2 -9.4 -16.6 L-9.4 -26.6 L-13.4 -26.6 C-15.4 -26.6 -16.9 -28.2 -16.9 -30.2 L-16.9 -33.6 C-16.9 -35.2 -15.6 -36.5 -14 -36.5 C-12.4 -36.5 -11.1 -35.2 -11.1 -33.6 L-11.1 -31.6 L-9.4 -31.6 Z" fill="#8c8957"/>

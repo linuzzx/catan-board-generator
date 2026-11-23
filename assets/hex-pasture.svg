@@ -1,30 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="173.2" height="200" viewBox="-78 -90.0666 156 180.133">
-<defs><radialGradient id="f" cx="0" cy="0" r="78.1" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#a0b701"/><stop offset="1" stop-color="#85b313"/></radialGradient></defs>
-<polygon points="0.00,-86.60 75.00,-43.30 75.00,43.30 0.00,86.60 -75.00,43.30 -75.00,-43.30" fill="#7a8410"/>
-<polygon points="0.00,-85.22 36.90,-63.91 34.50,-59.76 0.00,-79.67" fill="#d3d900" stroke="#d3d900" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="36.90,-63.91 73.80,-42.61 69.00,-39.84 34.50,-59.76" fill="#cad100" stroke="#cad100" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="73.80,-42.61 73.80,0.00 69.00,0.00 69.00,-39.84" fill="#aebf00" stroke="#aebf00" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="73.80,0.00 73.80,42.61 69.00,39.84 69.00,0.00" fill="#859e00" stroke="#859e00" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="73.80,42.61 36.90,63.91 34.50,59.76 69.00,39.84" fill="#688801" stroke="#688801" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="36.90,63.91 0.00,85.22 0.00,79.67 34.50,59.76" fill="#7e9801" stroke="#7e9801" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="0.00,85.22 -36.90,63.91 -34.50,59.76 0.00,79.67" fill="#7e9801" stroke="#7e9801" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-36.90,63.91 -73.80,42.61 -69.00,39.84 -34.50,59.76" fill="#688801" stroke="#688801" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-73.80,42.61 -73.80,0.00 -69.00,0.00 -69.00,39.84" fill="#859e00" stroke="#859e00" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-73.80,0.00 -73.80,-42.61 -69.00,-39.84 -69.00,0.00" fill="#aebf00" stroke="#aebf00" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-73.80,-42.61 -36.90,-63.91 -34.50,-59.76 -69.00,-39.84" fill="#cad100" stroke="#cad100" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-36.90,-63.91 0.00,-85.22 0.00,-79.67 -34.50,-59.76" fill="#d3d900" stroke="#d3d900" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="0.00,-79.67 34.50,-59.76 33.80,-58.54 0.00,-78.06" fill="#557600" stroke="#557600" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="34.50,-59.76 69.00,-39.84 67.60,-39.03 33.80,-58.54" fill="#557600" stroke="#557600" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="69.00,-39.84 69.00,0.00 67.60,0.00 67.60,-39.03" fill="#819c01" stroke="#819c01" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="69.00,0.00 69.00,39.84 67.60,39.03 67.60,0.00" fill="#aabc03" stroke="#aabc03" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="69.00,39.84 34.50,59.76 33.80,58.54 67.60,39.03" fill="#c6d006" stroke="#c6d006" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="34.50,59.76 0.00,79.67 0.00,78.06 33.80,58.54" fill="#c6d006" stroke="#c6d006" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="0.00,79.67 -34.50,59.76 -33.80,58.54 0.00,78.06" fill="#c6d006" stroke="#c6d006" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-34.50,59.76 -69.00,39.84 -67.60,39.03 -33.80,58.54" fill="#c6d006" stroke="#c6d006" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-69.00,39.84 -69.00,0.00 -67.60,0.00 -67.60,39.03" fill="#aabc03" stroke="#aabc03" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-69.00,0.00 -69.00,-39.84 -67.60,-39.03 -67.60,0.00" fill="#819c01" stroke="#819c01" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-69.00,-39.84 -34.50,-59.76 -33.80,-58.54 -67.60,-39.03" fill="#557600" stroke="#557600" stroke-width="0.35" stroke-linejoin="round"/>
-<polygon points="-34.50,-59.76 0.00,-79.67 0.00,-78.06 -33.80,-58.54" fill="#557600" stroke="#557600" stroke-width="0.35" stroke-linejoin="round"/>
+<defs><radialGradient id="f" cx="0" cy="0" r="78.1" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#a0b701"/><stop offset="1" stop-color="#85b313"/></radialGradient><linearGradient id="fr" x1="0" y1="-86.6" x2="0" y2="86.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d3d900"/><stop offset="0.26" stop-color="#cad100"/><stop offset="0.4" stop-color="#aebf00"/><stop offset="0.6" stop-color="#859e00"/><stop offset="0.76" stop-color="#688801"/><stop offset="1" stop-color="#7e9801"/></linearGradient><linearGradient id="fl" x1="0" y1="-86.6" x2="0" y2="86.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#557600"/><stop offset="0.3" stop-color="#557600"/><stop offset="0.42" stop-color="#819c01"/><stop offset="0.58" stop-color="#aabc03"/><stop offset="0.7" stop-color="#c6d006"/><stop offset="1" stop-color="#c6d006"/></linearGradient></defs>
+<path d="M0.00 -86.60 L75.00 -43.30 L75.00 43.30 L0.00 86.60 L-75.00 43.30 L-75.00 -43.30 Z M-69.00 -39.84 L-69.00 39.84 L0.00 79.67 L69.00 39.84 L69.00 -39.84 L0.00 -79.67 Z" fill="url(#fr)" fill-rule="evenodd"/>
+<path d="M0.00 -79.67 L69.00 -39.84 L69.00 39.84 L0.00 79.67 L-69.00 39.84 L-69.00 -39.84 Z M-67.60 -39.03 L-67.60 39.03 L0.00 78.06 L67.60 39.03 L67.60 -39.03 L0.00 -78.06 Z" fill="url(#fl)" fill-rule="evenodd"/>
 <polygon points="0.00,-78.06 67.60,-39.03 67.60,39.03 0.00,78.06 -67.60,39.03 -67.60,-39.03" fill="url(#f)"/>
 <path fill="#e3e3e5" stroke="#979799" stroke-width="1.3" d="M-20.6 -28 L-20.6 -19.4 Q-20.6 -17.4 -18.10 -17.4 Q-15.6 -17.4 -15.6 -19.4 L-15.6 -28 Z"/>
 <path fill="#e3e3e5" stroke="#979799" stroke-width="1.3" d="M-15.0 -28 L-15.0 -19.4 Q-15.0 -17.4 -12.70 -17.4 Q-10.4 -17.4 -10.4 -19.4 L-10.4 -28 Z"/>

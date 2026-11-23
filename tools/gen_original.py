@@ -59,13 +59,24 @@ def band(a0, a1, colfn):
             s.append(f'<polygon points="{P(q)}" fill="{c}" stroke="{c}" stroke-width="0.35" stroke-linejoin="round"/>')
     return '\n'.join(s)
 
+def ring_path(a0, a1):
+    o = ring(a0); i = ring(a1)
+    return 'M' + ' L'.join(f'{x:.2f} {y:.2f}' for x, y in o) + ' Z M' + ' L'.join(f'{x:.2f} {y:.2f}' for x, y in i[::-1]) + ' Z'
+
 def hex_tile(pal, gid):
+    # Rahmen als weicher Verlauf von oben (hell) nach unten (dunkel), innen eine dünne Schattenkante
+    R = AP_OUT / C30
+    grad = lambda gid2, stops: (f'<linearGradient id="{gid2}" x1="0" y1="{-R:.1f}" x2="0" y2="{R:.1f}" gradientUnits="userSpaceOnUse">' +
+                                ''.join(f'<stop offset="{o}" stop-color="{c}"/>' for o, c in stops) + '</linearGradient>')
     b = []
-    b.append(f'<defs><radialGradient id="{gid}" cx="0" cy="0" r="{AP_IN/C30:.1f}" gradientUnits="userSpaceOnUse">'
-             f'<stop offset="0" stop-color="{pal["c0"]}"/><stop offset="1" stop-color="{pal["c1"]}"/></radialGradient></defs>')
-    b.append(f'<polygon points="{P(ring(AP_OUT))}" fill="{pal["out"]}"/>')
-    b.append(band(AP_F, AP_L, lambda n: pal[n]))
-    b.append(band(AP_L, AP_IN, lambda n: pal['l' + LINE[n]]))
+    b.append('<defs>' +
+             f'<radialGradient id="{gid}" cx="0" cy="0" r="{AP_IN/C30:.1f}" gradientUnits="userSpaceOnUse">'
+             f'<stop offset="0" stop-color="{pal["c0"]}"/><stop offset="1" stop-color="{pal["c1"]}"/></radialGradient>' +
+             grad(gid + 'r', [(0, pal['A']), (.26, pal['B']), (.4, pal['C']), (.6, pal['D']), (.76, pal['E']), (1, pal['F'])]) +
+             grad(gid + 'l', [(0, pal['lab']), (.3, pal['lab']), (.42, pal['lc']), (.58, pal['ld']), (.7, pal['lef']), (1, pal['lef'])]) +
+             '</defs>')
+    b.append(f'<path d="{ring_path(AP_OUT, AP_L)}" fill="url(#{gid}r)" fill-rule="evenodd"/>')
+    b.append(f'<path d="{ring_path(AP_L, AP_IN)}" fill="url(#{gid}l)" fill-rule="evenodd"/>')
     b.append(f'<polygon points="{P(ring(AP_IN))}" fill="url(#{gid})"/>')
     return '\n'.join(b)
 
