@@ -191,7 +191,7 @@
     $("#checks").innerHTML = rows.map(function (r) {
       return '<li class="' + (r[0] ? "ok" : "bad") + '"><span aria-hidden="true">' + (r[0] ? "✓" : "✗") + "</span>" + r[1] + "</li>";
     }).join("");
-    $("#start-corner").textContent = C.CORNER_NAMES[b.corner];
+    $("#start-corner").textContent = "Ecke " + C.CORNER_NAMES[b.corner];
     $("#chip-order").innerHTML = M.chips.map(function (n, i) {
       return '<span class="' + (n === 6 || n === 8 ? "red" : "") + '"><i>' + chipLetter(i) + "</i>" + n + "</span>";
     }).join("");
@@ -254,15 +254,29 @@
       r.addEventListener("change", function (e) { state.mode = e.target.value; build("all"); });
     });
     $("#btn-copy").addEventListener("click", function () {
-      var done = function () { toast("Link kopiert – schick ihn deinen Mitspielern!"); };
+      var done = function () { toast("Link kopiert"); };
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, function () { toast("Kopiere den Link aus der Adresszeile"); });
       else toast("Kopiere den Link aus der Adresszeile");
     });
     $("#btn-print").addEventListener("click", function () { window.print(); });
+    $("#btn-theme").addEventListener("click", function () {
+      var dark = document.documentElement.getAttribute("data-theme") !== "dark";
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+      try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+      syncTheme();
+    });
     window.addEventListener("hashchange", function () { readHash(); syncControls(); build("all"); });
   }
 
+  function syncTheme() {
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    $("#btn-theme").setAttribute("aria-pressed", String(dark));
+    $("#btn-theme .theme-label").textContent = dark ? "Hell" : "Dunkel";
+    $("#btn-theme").setAttribute("aria-label", dark ? "Helles Design einschalten" : "Dunkles Design einschalten");
+  }
+
   function syncControls() {
+    syncTheme();
     $("#opt-desert").checked = state.opts.desertCenter;
     $("#opt-ports").checked = state.opts.randomPorts;
     document.querySelectorAll('input[name="players"]').forEach(function (r) { r.checked = r.value === state.mode; });

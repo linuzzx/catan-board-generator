@@ -6,41 +6,50 @@
 <title>Catan Brett-Würfler – zufällige Spielfelder nach den Regeln</title>
 <meta name="description" content="Erzeugt zufällige Catan-Spielfelder nach den offiziellen Regeln: Felder, Zahlenchips und Häfen. Teilbar per Link.">
 <link rel="icon" href="assets/chip-6.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/alegreya-sans-500.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css?v=10">
+<meta name="color-scheme" content="light dark">
+<script>
+  // Farbschema vor dem ersten Zeichnen setzen, damit nichts aufblitzt
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem("theme"); } catch (e) {}
+    if (t !== "dark" && t !== "light") t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
 </head>
 <body>
 
-<header class="hero">
-  <div class="hero-deco" aria-hidden="true">
-    <img src="assets/icon-wood.svg" alt="" class="f f1"><img src="assets/icon-brick.svg" alt="" class="f f2">
-    <img src="assets/icon-wool.svg" alt="" class="f f3"><img src="assets/icon-grain.svg" alt="" class="f f4">
-    <img src="assets/icon-ore.svg" alt="" class="f f5">
+<header class="top">
+  <div class="brand">
+    <h1>Brett-Würfler</h1>
+    <p class="sub">Zufällige Catan-Spielfelder, gemischt nach den offiziellen Regeln.</p>
   </div>
-  <p class="kicker">Siedler, aufgepasst!</p>
-  <h1 aria-label="Brett-Würfler">
-    <span>B</span><span>r</span><span>e</span><span>t</span><span>t</span><span class="dash">-</span><span>W</span><span>ü</span><span>r</span><span>f</span><span>l</span><span>e</span><span>r</span>
-  </h1>
-  <p class="sub">Ein frisches Catan-Spielfeld in einem Klick – fair gemischt nach den Spielregeln.</p>
-  <svg class="wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,30 C120,60 240,0 360,30 C480,60 600,0 720,30 C840,60 960,0 1080,30 C1200,60 1320,0 1440,30 L1440,60 L0,60Z"/></svg>
+  <button id="btn-theme" class="theme" type="button" aria-pressed="false">
+    <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg>
+    <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg>
+    <span class="theme-label">Dunkel</span>
+  </button>
 </header>
 
 <main class="layout">
 
-  <section class="board-card" aria-label="Spielfeld">
+  <section class="board-wrap" aria-label="Spielfeld">
     <svg id="board" class="board" viewBox="-660 -575 1320 1150" role="img" aria-label="Zufällig erzeugtes Catan-Spielfeld"></svg>
   </section>
 
   <aside class="side">
 
-    <section class="card controls">
-      <button id="btn-new" class="big">
-        <svg id="die" viewBox="0 0 48 48" width="38" height="38" aria-hidden="true">
-          <rect x="3" y="3" width="42" height="42" rx="11" fill="#fff8e1" stroke="#3b2a14" stroke-width="3.5"/>
-          <circle cx="15" cy="15" r="4" fill="#c4161c"/><circle cx="33" cy="15" r="4" fill="#c4161c"/>
-          <circle cx="24" cy="24" r="4" fill="#c4161c"/>
-          <circle cx="15" cy="33" r="4" fill="#c4161c"/><circle cx="33" cy="33" r="4" fill="#c4161c"/>
+    <section class="block controls" aria-label="Brett erzeugen">
+      <button id="btn-new" class="primary" type="button">
+        <svg id="die" viewBox="0 0 48 48" width="30" height="30" aria-hidden="true">
+          <rect x="4" y="4" width="40" height="40" rx="10" fill="none" stroke="currentColor" stroke-width="3.5"/>
+          <circle cx="16" cy="16" r="3.6" fill="currentColor"/><circle cx="32" cy="16" r="3.6" fill="currentColor"/>
+          <circle cx="24" cy="24" r="3.6" fill="currentColor"/>
+          <circle cx="16" cy="32" r="3.6" fill="currentColor"/><circle cx="32" cy="32" r="3.6" fill="currentColor"/>
         </svg>
-        <span>Neues Brett würfeln!</span>
+        <span>Neues Brett würfeln</span>
       </button>
 
       <div class="seg" role="radiogroup" aria-label="Spielerzahl">
@@ -48,32 +57,41 @@
         <label><input type="radio" name="players" value="56"><span>5–6 Spieler</span></label>
       </div>
 
-      <div class="mini-row">
-        <button id="btn-tiles" class="mini">Felder neu</button>
-        <button id="btn-nums" class="mini" title="Die Spirale startet in einer anderen Ecke">Zahlen neu</button>
-        <button id="btn-ports" class="mini">Häfen neu</button>
+      <div class="partial">
+        <span class="partial-label">Nur neu mischen:</span>
+        <div class="mini-row">
+          <button id="btn-tiles" class="mini" type="button">Felder</button>
+          <button id="btn-nums" class="mini" type="button" title="Die Spirale startet in einer anderen Ecke">Zahlen</button>
+          <button id="btn-ports" class="mini" type="button" title="Nur wenn Häfen zufällig verteilt werden">Häfen</button>
+        </div>
       </div>
-
-      <label class="opt"><input type="checkbox" id="opt-desert"><span class="tick"></span>
-        <span class="otext"><b>Wüste in die Mitte</b><small>Sonst landet sie irgendwo auf der Insel.</small></span></label>
-      <label class="opt"><input type="checkbox" id="opt-ports"><span class="tick"></span>
-        <span class="otext"><b>Häfen zufällig verteilen</b><small>Optional: Die Hafenplättchen werden auf den festen Hafenplätzen gemischt.</small></span></label>
-
-      <div class="share">
-        <button id="btn-copy" class="soft">🔗 Link kopieren</button>
-        <button id="btn-print" class="soft">🖨️ Drucken</button>
-      </div>
-      <p class="startline">Zahlen starten in der Ecke <b id="start-corner">–</b></p>
-      <p class="seedline">Brett-Code: <code id="seed">–</code></p>
     </section>
 
-    <section class="card">
+    <section class="block" aria-label="Optionen">
+      <label class="opt"><input type="checkbox" id="opt-desert"><span class="switch" aria-hidden="true"></span>
+        <span class="otext"><b>Wüste in die Mitte</b><small>Sonst landet sie irgendwo auf der Insel.</small></span></label>
+      <label class="opt"><input type="checkbox" id="opt-ports"><span class="switch" aria-hidden="true"></span>
+        <span class="otext"><b>Häfen zufällig verteilen</b><small>Die Hafenplättchen werden auf den festen Hafenplätzen gemischt.</small></span></label>
+    </section>
+
+    <section class="block share-block" aria-label="Teilen">
+      <dl class="facts">
+        <div><dt>Brett-Code</dt><dd><code id="seed">–</code></dd></div>
+        <div><dt>Zahlen starten</dt><dd id="start-corner">–</dd></div>
+      </dl>
+      <div class="share">
+        <button id="btn-copy" class="ghost" type="button">Link kopieren</button>
+        <button id="btn-print" class="ghost" type="button">Drucken</button>
+      </div>
+    </section>
+
+    <section class="block">
       <h2>Regel-Check</h2>
       <ul id="checks" class="checks"></ul>
     </section>
 
-    <details class="card rules">
-      <summary>So wird gemischt</summary>
+    <details class="block rules">
+      <summary><h2>So wird gemischt</h2></summary>
       <ol>
         <li id="rule-count"></li>
         <li>Die Zahlenchips folgen immer der festen Reihenfolge der Spielregel: Start auf einem der 6 Eckfelder, dann gegen den Uhrzeigersinn in einer Spirale nach innen. Wüsten werden übersprungen.</li>
@@ -81,19 +99,19 @@
         <li id="rule-ports"></li>
         <li id="rule-players"></li>
       </ol>
-      <div class="order"><b>Zahlenfolge</b><div id="chip-order"></div></div>
+      <div class="order"><h3>Zahlenfolge</h3><div id="chip-order"></div></div>
     </details>
 
   </aside>
 </main>
 
 <footer>
-  <p>Ein Fan-Projekt für Spielabende. CATAN ist eine Marke der Catan GmbH, diese Seite ist nicht mit ihr verbunden.</p>
+  <p>Ein Fan-Projekt für Spielabende. CATAN ist eine Marke der Catan GmbH, diese Seite ist nicht mit ihr verbunden. Schriften: Alegreya und Alegreya Sans (SIL Open Font License).</p>
 </footer>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script src="core.js?v=10"></script>
-<script src="ui.js?v=10"></script>
+<script src="core.js?v=11"></script>
+<script src="ui.js?v=11"></script>
 </body>
 </html>
