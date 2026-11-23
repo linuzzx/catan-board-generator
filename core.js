@@ -49,45 +49,23 @@
   };
 
   // ---------- Hafenplatz: Schiff und Stege ohne Überschneidungen ----------
-  var SHIP_S = 0.98;                                   // Skalierung der Schiffsgrafik (130x120)
-  // Umriss relativ zur Bootsmitte (Schiffsgrafik: Barrel x ±27, y -81..-8; Rumpf x ±55, y -16..16)
-  var SHIP_RECTS = [[-27, 27, -81, -8], [-55, 55, -16, 16]].map(function (r) { return r.map(function (v) { return v * SHIP_S; }); });
-  var SHIP_BOX = { x0: -55 * SHIP_S, x1: 55 * SHIP_S, y0: -81 * SHIP_S, y1: 16 * SHIP_S };
-  function inShip(x, y, pad) {
-    return SHIP_RECTS.some(function (r) { return x > r[0] - pad && x < r[1] + pad && y > r[2] - pad && y < r[3] + pad; });
-  }
-  function insideHex(px, py, c, r) {
-    var ax = Math.abs(px - c.x), ay = Math.abs(py - c.y);
-    return ax <= r * Math.sqrt(3) / 2 && ay <= r - ax / Math.sqrt(3);
-  }
+  var SHIP_S = 1;                                      // Skalierung der Schiffsgrafik (130x120)
+  // Umriss relativ zur Bootsmitte (Zylinder und Rumpf der Schiffsgrafik), für den Rahmenabstand
+  var SHIP_BOX = { x0: -35 * SHIP_S, x1: 35 * SHIP_S, y0: -78 * SHIP_S, y1: 16 * SHIP_S };
+  // Wie im Original: zwei Stege laufen von den beiden Ecken der Küstenkante schräg aufeinander zu
+  // (60°-Spitze eines gleichseitigen Dreiecks), das Schiff liegt knapp vor dieser Spitze.
+  var JET_LEN = 59;       // Steglänge (Original: 53 von 86 px)
+  var SHIP_DY = 20.6;     // Bootsmitte liegt so weit unter der Spitze, dass der Zylinder 22 Einheiten darüber steht
   function placePort(L, e) {
     var land = L.land[e.land];
     var th = Math.atan2(e.sea.y - land.y, e.sea.x - land.x), nx = Math.cos(th), ny = Math.sin(th);
-    var hit = function (px, py) {
-      for (var x = SHIP_BOX.x0; x <= SHIP_BOX.x1; x += 4) for (var y = SHIP_BOX.y0; y <= SHIP_BOX.y1; y += 4) {
-        if (!inShip(x, y, 0)) continue;
-        for (var k = 0; k < L.land.length; k++) if (insideHex(px + x, py + y, L.land[k], 106)) return true;
-      }
-      return false;
-    };
-    var D = 60, px, py;
-    for (; D < 220; D += 2) {
-      px = land.x + nx * (86.6 + D); py = land.y + ny * (86.6 + D);
-      if (!hit(px, py)) break;
-    }
-    D += 12; px = land.x + nx * (86.6 + D); py = land.y + ny * (86.6 + D); // etwas Luft zum Ufer, damit die Stege sichtbar lang sind
-    // beide Stege enden gleich weit: dort, wo der erste das Schiff berührt (höchstens kurz hinter der Bootsmitte)
-    var starts = [-1, 1].map(function (s) {
-      return [land.x + 100 * Math.cos(th + s * Math.PI / 6), land.y + 100 * Math.sin(th + s * Math.PI / 6)];
+    var ax = land.x + nx * 86.6 * 2, ay = land.y + ny * 86.6 * 2; // Spitze über der Kantenmitte
+    var jets = [-1, 1].map(function (s) {
+      var vx = land.x + 100 * Math.cos(th + s * Math.PI / 6), vy = land.y + 100 * Math.sin(th + s * Math.PI / 6);
+      var dx = ax - vx, dy = ay - vy, l = Math.sqrt(dx * dx + dy * dy);
+      return { x1: vx, y1: vy, x2: vx + dx / l * JET_LEN, y2: vy + dy / l * JET_LEN };
     });
-    var tEnd = D + 20;
-    starts.forEach(function (v) {
-      for (var t = 0; t < tEnd; t += 2) {
-        if (inShip(v[0] + nx * (t + 2) - px, v[1] + ny * (t + 2) - py, 7)) { tEnd = t; break; }
-      }
-    });
-    var jets = starts.map(function (v) { return { x1: v[0], y1: v[1], x2: v[0] + nx * tEnd, y2: v[1] + ny * tEnd }; });
-    return { x: px, y: py, th: th, jets: jets };
+    return { x: ax, y: ay + SHIP_DY, th: th, jets: jets };
   }
 
   // ---------- Layout ----------
