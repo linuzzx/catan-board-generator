@@ -5,6 +5,7 @@
   var $ = function (s) { return document.querySelector(s); };
 
   var HW = C.HEX_W, HH = C.HEX_H;
+  var ASSET_V = "9"; // bei neuen Grafiken hochzählen, damit Browser nicht die alten aus dem Cache nehmen
   var TYPE_IMG = { forest: "hex-forest", pasture: "hex-pasture", fields: "hex-fields", hills: "hex-hills", mountains: "hex-mountains", desert: "hex-desert" };
 
   var state = { mode: "34", seeds: { t: "", n: "0", h: "" }, opts: { desertCenter: false, randomPorts: false }, helper: false, board: null };
@@ -39,7 +40,7 @@
 
   // ---------- Rendering ----------
   function img(name, x, y, w, h, extra) {
-    return '<image href="assets/' + name + '.svg" x="' + (x - w / 2).toFixed(1) + '" y="' + (y - h / 2).toFixed(1) +
+    return '<image href="assets/' + name + '.svg?v=' + ASSET_V + '" x="' + (x - w / 2).toFixed(1) + '" y="' + (y - h / 2).toFixed(1) +
       '" width="' + w + '" height="' + h + '" ' + (extra || "") + "/>";
   }
   function hexPoints(cx, cy, r) {
