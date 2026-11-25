@@ -88,6 +88,7 @@ window.onerror = function (msg, src, line, col) {
     font: inherit; font-size: 15px; padding: 10px 4px; border-radius: 9px; cursor: pointer;
     touch-action: manipulation;
   }
+  .seg button small { display: block; font-size: 11px; opacity: .7; margin-top: 1px; }
   .seg button.on { background: #2f8f5b; color: #fff; font-weight: 600; }
   .btn {
     display: block; width: 100%; border: 0; border-radius: 14px; padding: 14px;
@@ -152,10 +153,9 @@ window.onerror = function (msg, src, line, col) {
     <div class="group">
       <div class="gl">Spielfeld</div>
       <div class="seg" id="sizeSeg">
-        <button type="button" data-v="15">15×15</button>
-        <button type="button" data-v="20">20×20</button>
-        <button type="button" data-v="25">25×25</button>
-        <button type="button" data-v="30">30×30</button>
+        <button type="button" data-v="small">Klein<small>10×9</small></button>
+        <button type="button" data-v="normal">Normal<small>17×15</small></button>
+        <button type="button" data-v="large">Groß<small>24×21</small></button>
       </div>
     </div>
     <div class="best">Rekord mit diesen Einstellungen: <b id="menuBest">0</b></div>
@@ -196,8 +196,9 @@ window.onerror = function (msg, src, line, col) {
   }
 
   /* ---------- Konstanten ---------- */
-  var N = 20;
-  var SIZES = { '15': 15, '20': 20, '25': 25, '30': 30 };
+  var W = 17, H = 15;
+  // Spielfeldgrößen wie bei Google Snake
+  var SIZES = { small: { w: 10, h: 9 }, normal: { w: 17, h: 15 }, large: { w: 24, h: 21 } };
   var SPEEDS = { slow: 165, normal: 115, fast: 78 };
   var GRACE_MS = 190; // Kulanz: so lange wartet die Schlange vor einem Aufprall auf eine Lenkung
   var COLORS = {
@@ -235,17 +236,16 @@ window.onerror = function (msg, src, line, col) {
   var menuOv = $('menu'), pauseOv = $('pauseOv'), overOv = $('overOv');
 
   /* ---------- Einstellungen ---------- */
-  var settings = { walls: true, speed: 'normal', size: '20' };
+  var settings = { walls: true, speed: 'normal', size: 'normal' };
   (function loadSettings() {
     var w = store.get('snake_walls'), s = store.get('snake_speed'), z = store.get('snake_size');
     if (w === 'off') settings.walls = false;
     if (s && SPEEDS.hasOwnProperty(s)) settings.speed = s;
     if (z && SIZES.hasOwnProperty(z)) settings.size = z;
-    N = SIZES[settings.size];
   })();
   function hsKey() {
     var k = 'snake_hs_' + (settings.walls ? 'on' : 'off') + '_' + settings.speed;
-    return settings.size === '20' ? k : k + '_' + settings.size; // 20×20 behält alte Rekorde
+    return k + '_' + settings.size;
   }
   function getBest() { var v = parseInt(store.get(hsKey()), 10); return isNaN(v) ? 0 : v; }
 
@@ -273,7 +273,7 @@ window.onerror = function (msg, src, line, col) {
   }
   bindSeg('wallSeg', function (v) { settings.walls = (v === 'on'); store.set('snake_walls', v); });
   bindSeg('speedSeg', function (v) { settings.speed = v; store.set('snake_speed', v); });
-  bindSeg('sizeSeg', function (v) { settings.size = v; store.set('snake_size', v); N = SIZES[v]; setPreview(); });
+  bindSeg('sizeSeg', function (v) { settings.size = v; store.set('snake_size', v); resize(); });
 
   /* ---------- Spielzustand ---------- */
   var state = 'menu'; // menu | playing | paused | dying | over
@@ -291,23 +291,31 @@ window.onerror = function (msg, src, line, col) {
   function placeFood() {
     var free = [], occ = {};
     for (var i = 0; i < snake.length; i++) occ[snake[i].x + ',' + snake[i].y] = true;
-    for (var y = 0; y < N; y++) for (var x = 0; x < N; x++) if (!occ[x + ',' + y]) free.push({ x: x, y: y });
+    for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) if (!occ[x + ',' + y]) free.push({ x: x, y: y });
     food = free.length ? free[Math.floor(Math.random() * free.length)] : null;
     if (food) food.born = clock;
   }
 
+  // Lange Seite des Felds folgt der langen Seite des Bildschirms (Hochformat: Feld gedreht)
+  function applySize() {
+    var z = SIZES[settings.size];
+    var portrait = stage.clientHeight > stage.clientWidth;
+    if (portrait) { W = z.h; H = z.w; } else { W = z.w; H = z.h; }
+  }
+
   function setPreview() {
-    var cy = Math.floor(N / 2), cx = Math.floor(N / 2) - 2;
+    var cy = Math.floor(H / 2), cx = Math.max(2, Math.floor(W / 2) - 2);
     snake = [{ x: cx, y: cy }, { x: cx - 1, y: cy }, { x: cx - 2, y: cy }];
     prevSnake = copyList(snake);
     dir = { x: 1, y: 0 };
-    food = { x: Math.min(N - 2, cx + 4), y: cy, born: -1000 };
+    food = { x: Math.min(W - 1, cx + 3), y: cy, born: -1000 };
   }
 
   function newGame() {
-    N = SIZES[settings.size];
+    applySize();
+    resize();
     stalled = false;
-    var cy = Math.floor(N / 2), cx = Math.floor(N / 2) - 2;
+    var cy = Math.floor(H / 2), cx = Math.max(2, Math.floor(W / 2) - 2);
     snake = [{ x: cx, y: cy }, { x: cx - 1, y: cy }, { x: cx - 2, y: cy }];
     prevSnake = copyList(snake);
     dir = { x: 1, y: 0 };
@@ -344,8 +352,8 @@ window.onerror = function (msg, src, line, col) {
   }
 
   function blocked(nx, ny) {
-    if (settings.walls && (nx < 0 || ny < 0 || nx >= N || ny >= N)) return true;
-    if (!settings.walls) { nx = (nx + N) % N; ny = (ny + N) % N; }
+    if (settings.walls && (nx < 0 || ny < 0 || nx >= W || ny >= H)) return true;
+    if (!settings.walls) { nx = (nx + W) % W; ny = (ny + H) % H; }
     var eats = food && nx === food.x && ny === food.y;
     var checkLen = eats ? snake.length : snake.length - 1; // Schwanz rückt weiter, falls nicht gefressen
     for (var i = 0; i < checkLen; i++) {
@@ -371,7 +379,7 @@ window.onerror = function (msg, src, line, col) {
       return;
     }
     stalled = false;
-    if (!settings.walls) { nx = (nx + N) % N; ny = (ny + N) % N; }
+    if (!settings.walls) { nx = (nx + W) % W; ny = (ny + H) % H; }
     var eats = food && nx === food.x && ny === food.y;
     prevSnake = copyList(snake);
     snake.unshift({ x: nx, y: ny });
@@ -479,7 +487,7 @@ window.onerror = function (msg, src, line, col) {
 
   /* ---------- Größe / Schärfe ---------- */
   var bg = document.createElement('canvas'), bgctx = bg.getContext('2d');
-  var cssSize = 0, dpr = 1;
+  var dpr = 1;
 
   function roundRect(c, x, y, w, h, r) {
     c.beginPath();
@@ -493,44 +501,45 @@ window.onerror = function (msg, src, line, col) {
 
   function resize() {
     var w = stage.clientWidth, h = stage.clientHeight;
-    var size = Math.floor(Math.min(w, h, 640));
-    if (size < 100) size = Math.max(100, Math.floor(Math.min(window.innerWidth, window.innerHeight) - 20));
+    if (w < 100 || h < 100) { w = window.innerWidth - 20; h = window.innerHeight - 140; }
+    if (state === 'menu') { applySize(); setPreview(); }
+    var cell = Math.min(w / W, h / H, 720 / Math.max(W, H));
     dpr = window.devicePixelRatio || 1;
     if (dpr > 3) dpr = 3;
-    cssSize = size;
-    canvas.style.width = size + 'px';
-    canvas.style.height = size + 'px';
-    canvas.width = Math.round(size * dpr);
-    canvas.height = Math.round(size * dpr);
+    var px = Math.max(4, Math.floor(cell * dpr)); // ganze Gerätepixel pro Feld = scharfe Kanten
+    canvas.width = px * W;
+    canvas.height = px * H;
+    canvas.style.width = (canvas.width / dpr) + 'px';
+    canvas.style.height = (canvas.height / dpr) + 'px';
     bg.width = canvas.width; bg.height = canvas.height;
     drawBackground();
   }
 
   function drawBackground() {
-    var s = bg.width / N;
+    var s = bg.width / W;
     bgctx.setTransform(s, 0, 0, s, 0, 0);
-    bgctx.clearRect(0, 0, N, N);
+    bgctx.clearRect(0, 0, W, H);
     bgctx.fillStyle = '#121820';
-    roundRect(bgctx, 0, 0, N, N, 0.8);
+    roundRect(bgctx, 0, 0, W, H, 0.45);
     bgctx.fill();
     bgctx.fillStyle = 'rgba(255,255,255,0.025)';
-    for (var y = 0; y < N; y++) for (var x = 0; x < N; x++) {
+    for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) {
       if ((x + y) % 2 === 0) { roundRect(bgctx, x + 0.06, y + 0.06, 0.88, 0.88, 0.18); bgctx.fill(); }
     }
     bgctx.fillStyle = 'rgba(255,255,255,0.06)';
-    for (y = 0; y < N; y++) for (x = 0; x < N; x++) {
+    for (y = 0; y < H; y++) for (x = 0; x < W; x++) {
       bgctx.beginPath(); bgctx.arc(x + 0.5, y + 0.5, 0.035, 0, Math.PI * 2); bgctx.fill();
     }
     if (settings.walls) {
       bgctx.strokeStyle = '#4a3133';
       bgctx.lineWidth = 0.08;
-      roundRect(bgctx, 0.04, 0.04, N - 0.08, N - 0.08, 0.76);
+      roundRect(bgctx, 0.04, 0.04, W - 0.08, H - 0.08, 0.41);
       bgctx.stroke();
     } else {
       bgctx.strokeStyle = '#2a3a31';
       bgctx.lineWidth = 0.06;
       if (bgctx.setLineDash) bgctx.setLineDash([0.3, 0.3]);
-      roundRect(bgctx, 0.04, 0.04, N - 0.08, N - 0.08, 0.76);
+      roundRect(bgctx, 0.04, 0.04, W - 0.08, H - 0.08, 0.41);
       bgctx.stroke();
       if (bgctx.setLineDash) bgctx.setLineDash([]);
     }
@@ -541,15 +550,15 @@ window.onerror = function (msg, src, line, col) {
   window.addEventListener('orientationchange', function () { setTimeout(resize, 200); });
 
   /* ---------- Zeichnen ---------- */
-  function wrapDelta(d) {
-    if (d > N / 2) return d - N;
-    if (d < -N / 2) return d + N;
+  function wrapDelta(d, n) {
+    if (d > n / 2) return d - n;
+    if (d < -n / 2) return d + n;
     return d;
   }
 
   function lerpCell(a, b, t) {
     var dx = b.x - a.x, dy = b.y - a.y;
-    if (!settings.walls) { dx = wrapDelta(dx); dy = wrapDelta(dy); }
+    if (!settings.walls) { dx = wrapDelta(dx, W); dy = wrapDelta(dy, H); }
     return { x: a.x + dx * t + 0.5, y: a.y + dy * t + 0.5 };
   }
 
@@ -564,7 +573,7 @@ window.onerror = function (msg, src, line, col) {
     var pts = [raw[0]];
     for (i = 1; i < raw.length; i++) {
       var p = pts[i - 1];
-      pts.push({ x: p.x + wrapDelta(raw[i].x - p.x), y: p.y + wrapDelta(raw[i].y - p.y) });
+      pts.push({ x: p.x + wrapDelta(raw[i].x - p.x, W), y: p.y + wrapDelta(raw[i].y - p.y, H) });
     }
     return pts;
   }
@@ -588,7 +597,7 @@ window.onerror = function (msg, src, line, col) {
     var vx = dir.x, vy = dir.y;
     if (snake.length > 1) {
       var ddx = snake[0].x - snake[1].x, ddy = snake[0].y - snake[1].y;
-      if (!settings.walls) { ddx = wrapDelta(ddx); ddy = wrapDelta(ddy); }
+      if (!settings.walls) { ddx = wrapDelta(ddx, W); ddy = wrapDelta(ddy, H); }
       if (ddx || ddy) { vx = ddx; vy = ddy; }
     }
     ctx.fillStyle = dead ? COLORS.deadOutline : COLORS.outline;
@@ -631,9 +640,9 @@ window.onerror = function (msg, src, line, col) {
   }
 
   function render(t) {
-    var bgKey = settings.walls + '_' + N + '_' + canvas.width;
+    var bgKey = settings.walls + '_' + W + 'x' + H + '_' + canvas.width;
     if (lastBgKey !== bgKey) { lastBgKey = bgKey; drawBackground(); }
-    var s = canvas.width / N;
+    var s = canvas.width / W;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     var shake = 0;
@@ -644,7 +653,7 @@ window.onerror = function (msg, src, line, col) {
     ctx.setTransform(s, 0, 0, s, sx, sy);
 
     ctx.save();
-    roundRect(ctx, 0, 0, N, N, 0.8);
+    roundRect(ctx, 0, 0, W, H, 0.45);
     ctx.clip();
     drawFood();
     if (snake.length) {
@@ -658,8 +667,8 @@ window.onerror = function (msg, src, line, col) {
           if (pts[i].x < minX) minX = pts[i].x; if (pts[i].x > maxX) maxX = pts[i].x;
           if (pts[i].y < minY) minY = pts[i].y; if (pts[i].y > maxY) maxY = pts[i].y;
         }
-        for (var oy = -N; oy <= N; oy += N) for (var ox = -N; ox <= N; ox += N) {
-          if (maxX + ox < -1 || minX + ox > N + 1 || maxY + oy < -1 || minY + oy > N + 1) continue;
+        for (var oy = -H; oy <= H; oy += H) for (var ox = -W; ox <= W; ox += W) {
+          if (maxX + ox < -1 || minX + ox > W + 1 || maxY + oy < -1 || minY + oy > H + 1) continue;
           drawSnakeAt(pts, ox, oy, dead);
         }
       }
